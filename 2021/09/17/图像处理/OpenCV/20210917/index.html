@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xdw2141.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OpenCV">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像处理">
+<meta property="og:url" content="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/20210917/index.html">
+<meta property="og:site_name" content="Y.X&#39;s Blog">
+<meta property="og:description" content="OpenCV">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-17T15:26:48.889Z">
+<meta property="article:modified_time" content="2021-09-17T15:25:42.881Z">
+<meta property="article:author" content="Y.X">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/20210917/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>图像处理 | Y.X's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Y.X's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/20210917/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图像处理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-17 23:26:48 / 修改时间：23:25:42" itemprop="dateCreated datePublished" datetime="2021-09-17T23:26:48+08:00">2021-09-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">图像处理</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/20210917/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/20210917/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>OpenCV</p>
+<span id="more"></span>
+<h1 id="头文件引入"><a href="#头文件引入" class="headerlink" title="头文件引入"></a>头文件引入</h1><pre><code>import cv2     #opencv读取的格式是BGR
+import matplotlib.pyplot as plt
+import numpy as np
+</code></pre>
+<h1 id="一个简单的图片显示函数"><a href="#一个简单的图片显示函数" class="headerlink" title="一个简单的图片显示函数"></a>一个简单的图片显示函数</h1><pre><code>def cv_show(name , img):
+    #图像的显示，也可以创建多个窗口
+    cv2.imshow(name,img)
+    #等待时间 ms级 0代表任意键终止
+    cv2.waitKey(0)
+    #关闭所有窗口
+    cv2.destroyAllWindows(）
+</code></pre>
+<p>#图像的属性<br>    cv2.imread(‘文件名’)  #图像读取<br>    img.shape #图像尺寸<br>    cv2.imwrite(‘grayCar.jpg’,img) #保存文件<br>    img.size #像素大小<br>    img.dtype #数据类型<br>    img.copy() #复制图像<br>    img[0:200,0:200] #图像分割<br>    cv2.IMREAD_GRAYSCALE #灰度图代码<br>    #图像拼接<br>    res = np.hstack((img1, img2, img3)) #横向<br>    res = np.vstack((img1, img2, img3)) #纵向</p>
+<p>#色值分割 与 组合<br>    b , g ,r = cv2.split(img)<br>    ccc = cv2.merge((b,g,r))</p>
+<p>#BGR 图像处理 （RGB值）<br>##只保留R<br>    cc[:,:,0] = 0<br>    cc[:,:,1] = 0</p>
+<p>##只保留G<br>    cc[:,:,0] = 0<br>    cc[:,:,2] = 0</p>
+<p>##只保留B<br>    cc[:,:,1] = 0<br>    cc[:,:,2] = 0</p>
+<p>#视频调用</p>
+<pre><code>vc = cv2.VideoCapture(&#39;test.mp4&#39;)
+#检查是否打开正确：
+if vc.isOpened():
+    open,frame = vc.read()
+else :
+    open = False
+</code></pre>
+<p>#视频展示<br>    while open:<br>        ret , frame = vc.read()<br>        if frame  is None:<br>            break<br>        if ret == True:<br>            gray = cv2.cvtColor(frame , cv2.COLOR_BGR2GRAY)<br>            cv2.imshow(‘result’,gray)<br>                if cv2.waitKey(10) &amp; 0xFF == 27:<br>                    break<br>    vc.release()<br>    cv2.destroyAllWindows()</p>
+<p>#边沿填充<br>    top_size , bottom_size , left_size ,right_size = 50, 50, 50, 50<br>##复制法<br>    replicate = cv2.copyMakeBorder(img,top_size,bottom_size,left_size,right_size,cv2.BORDER_REPLICATE)<br>##反射法<br>    REFLECT = cv2.copyMakeBorder(img,top_size,bottom_size,left_size,right_size,cv2.BORDER_REFLECT)<br>##反射法1<br>    REFLECT_101 = cv2.copyMakeBorder(img,top_size,bottom_size,left_size,right_size,cv2.BORDER_REFLECT_101)<br>##外包装法<br>    WRAP = cv2.copyMakeBorder(img,top_size,bottom_size,left_size,right_size,cv2.BORDER_WRAP)<br>##常量法<br>    CONSTANT = cv2.copyMakeBorder(img,top_size,bottom_size,left_size,right_size,cv2.BORDER_CONSTANT)</p>
+<p>#数值计算<br>##像素修改<br>    img1 = cv2.resize(img,(533,300))     #(w,h)<br>    img1 = cv2.resize(img,(0,0),fx=2,fy=2)<br>##图像融合 R = Ax1 ＋ Bx2 + b 需要尺寸相同<br>    R = cv2.addWeighted(x1 , A , x2 , B , b)</p>
+<p>#图像阈值<br>     #scr:只能输入单通道图像 一般为灰度图 thresh：阈值 maxval：最大值 type 二值操作类型<br>     res , dst =cv2.threshold(scr,thresh,maxval,type)<br>     #ret：阈值thresh：输出图</p>
+<pre><code>#亮的-&gt;最亮 暗的-&gt;最暗
+ret , thresh1 = cv2.threshold(img, 127 , 255 , cv2.THRESH_BINARY)
+#亮的-&gt;最暗 暗的-&gt;最亮
+ret , thresh2 = cv2.threshold(img, 127 , 255 , cv2.THRESH_BINARY_INV)
+#亮的-&gt;中等 暗的-&gt;不变
+ret , thresh3 = cv2.threshold(img, 127 , 255 , cv2.THRESH_TRUNC)
+#亮的-&gt;不变 暗的-&gt;最暗
+ret , thresh4 = cv2.threshold(img, 127 , 255 , cv2.THRESH_TOZERO)
+#亮的-&gt;最亮 暗的-&gt;不变
+ret , thresh5 = cv2.threshold(img, 127 , 255 , cv2.THRESH_TOZERO_INV)
+
+#打印
+titles = [&#39;Original Image&#39;,&#39;BINARY&#39;,&#39;BINARY_INV&#39;, &#39;TRUNC&#39;, &#39;TOZERO&#39;, &#39;TOZERO_INV&#39;]
+imgs = [img, thresh1 , thresh2 ,thresh3 ,thresh4, thresh5]
+
+for i in range(6):
+plt.subplot(2,3,i+1),plt.imshow(imgs[i],&#39;gray&#39;)
+plt.title(titles[i])
+plt.xticks([]),plt.yticks([])
+plt.show()
+</code></pre>
+<p>#图像平滑处理</p>
+<p>##均值滤波<br>    #简单的平均卷积操作<br>    cv2.blur(img,(3,3)) # 取3×3像素</p>
+<p>##方框滤波<br>    #基本和均值滤波一样 ， 可以归一化<br>    #-1 一致 True :归一化 和均值滤波一样  False :容易越界<br>    cv2.boxFilter(img,-1,(7,7),normalize=True)</p>
+<p>##高斯滤波<br>    #高斯模糊的卷积里的数值是满足高斯分布，相当于更重视中间的 （越近权重越高）<br>    cv2.GaussianBlur(img,(3,3),1)</p>
+<p>##中值滤波<br>    #用中值代替 (5x5)<br>    cv2.medianBlur(img,5)</p>
+<p>#形态学操作<br>##腐蚀操作 变细变小<br>    kernel = np.ones((3,3),np.uint8) //3x3<br>    cv2.erode(img,kernel,iterations = 1) #kernel:盒 iteration:迭代次数<br>##膨胀操作 变大<br>    kernel = np.ones((3,3),np.uint8)<br>    cv2.dilate(img,kernel,iterations=1)</p>
+<pre><code>#有细条的文字可通过腐蚀 再膨胀处理
+</code></pre>
+<p>##开运算 ：先腐蚀，后膨胀  MORPH_OPEN<br>    kernel = np.ones((5,5),np.uint8)<br>    cv2.morphologyEx(img ,cv2.MORPH_OPEN,kernel)</p>
+<p>##闭运算 ：先膨胀，后腐蚀 MORPH_CLOSE<br>    kernel = np.ones((5,5),np.uint8)<br>    cv2.morphologyEx(img ,cv2.MORPH_CLOSE,kernel)</p>
+<p>##梯度运算 :膨胀 - 腐蚀   MORPH_GRADIENT    轮廓，边界<br>    kernel = np.ones((5,5),np.uint8)<br>    cv2.morphologyEx(img,cv2.MORPH_GRADIENT,kernel)</p>
+<p>##礼帽 ： 原始输入 - 开运算结果    只剩刺<br>    kernel = np.ones((5,5),np.uint8)<br>    cv2.morphologyEx(img,cv2.MORPH_TOPHAT,kernel)</p>
+<p>##黑帽 ： 闭运算 - 原始输入     原始轮廓。。<br>    kernel = np.ones((5,5),np.uint8)<br>    cv2.morphologyEx(img,cv2.MORPH_BLACKHAT,kernel)</p>
+<p>#梯度计算 </p>
+<h2 id="sobel算子"><a href="#sobel算子" class="headerlink" title="sobel算子"></a>sobel算子</h2><pre><code>       | P1  P2  P3 |
+  A  = | P4  P5  P6 |    
+       | P7  P8  P9 |
+# x轴计算   右 - 左
+       | -1  0  1 |
+  Gx = | -2  0  2 |           P5x =  （P3 - P1） + 2*（P6 - P4） + （P9 - P7）
+       | -1  0  1 |
+# y轴计算   下 - 上
+       | -1  -2  -1 |
+  Gy = |  0   0   0 |         P5y =  （P7 - P1） + 2*（P8 - P2） + （P9 - P3）
+       |  1   2   1 |
+# G = |Gx| + |Gy|
+</code></pre>
+<p>###Code:</p>
+<pre><code>#水平方向
+cv2.Sobel(img,cv2.CV_64F,1,0,ksize=3) 
+# cv2.CV_64F :位数变多，能表示负数  水平方向（1：水平  0：竖直 ）ksize：大小-3x3
+#白到黑是正数，黑到白是负数，所有负数会截断成0，要取绝对值
+cv2.convertScaleAbs(img) #取绝对值
+
+#竖直方向
+ cv2.Sobel(img,cv2.CV_64F,0,1,ksize=3) 
+#cv2.CV_64F :能表示负数  竖直方向（1：水平  0：竖直 ）ksize：大小-3x3
+#白到黑是正数，黑到白是负数，所有负数会截断成0，要取绝对值
+cv2.convertScaleAbs(img) #取绝对值
+#图像结合
+cv2.addWeighted(img1,0.5,img2,0.5,0)
+</code></pre>
+<h2 id="Scharr算子"><a href="#Scharr算子" class="headerlink" title="Scharr算子"></a>Scharr算子</h2><pre><code>       | P1  P2  P3 |
+  A  = | P4  P5  P6 |    
+       | P7  P8  P9 |
+# x轴计算   右 - 左
+       |  -3  0   3 |
+  Gx = | -10  0  10 |           P5x =  3*（P3 - P1） + 10*（P6 - P4） + 3*（P9 - P7）
+       |  -3  0   3 |
+# y轴计算   下 - 上
+       | -3  -10  -3 |
+  Gy = |  0    0   0 |         P5y =   3*（P7 - P1） + 10*（P8 - P2） + 3*（P9 - P3）
+       |  3   10   3 |
+# G = |Gx| + |Gy|
+</code></pre>
+<p>###Code:<br>    #水平方向<br>    cv2.Scharr(img,cv2.CV_64F,1,0)<br>    cv2.convertScaleAbs(img)</p>
+<pre><code>#竖直方向
+cv2.Scharr(img,cv2.CV_64F,0,1)
+cv2.convertScaleAbs(img)
+
+#图像结合
+cv2.addWeighted(img1,0.5,img2,0.5,0)
+</code></pre>
+<h2 id="laplacian算子"><a href="#laplacian算子" class="headerlink" title="laplacian算子"></a>laplacian算子</h2><pre><code>       | P1  P2  P3 |
+  A  = | P4  P5  P6 |    
+       | P7  P8  P9 |
+
+       |   0   0   0 |
+  G  = |   1  -4   1 |         
+       |   0   1   0 |
+
+G = P2 + P4 + P6 + P8 - 4P5
+</code></pre>
+<p>####Code:<br>    cv2.Laplacian(img,cv2.CV_64F) #没有x y 不需要合并<br>    cv2.convertScaleAbs(img)</p>
+<p>#Canny边缘检测</p>
+<ol>
+<li>使用高斯滤波器，以平滑图像，滤除噪声。</li>
+<li>计算图像中每个像素点的梯度强度和方向。</li>
+<li>应用非极大值抑制，以消除边缘检测带来的杂散响应。</br><br> 1）线性插值法 ：M（q） = w * M（g2） + （1-w）* M（g1）<pre><code> w = distance（q,g2) / distance (g1,g2) &lt;/br&gt;
+</code></pre>
+<ol start="2">
+<li>为了简化计算，由于一个像素周围有8个像素，把一个像素的梯度方向离散为8个方向，这样只需要计算前后，不用插值</li>
+</ol>
+</li>
+<li>应用双阈值检测来确定真实和潜在的边缘。</li>
+<li>通过抑制孤立的弱边缘最终完成边缘检测。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+ 	
+  	 <div>
+  	   <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------The<i class="fa fa-paw"></i>End-------------</div>
+    
+</div>
+  	 </div>
+ 	
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Y.X
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/20210917/" title="图像处理">https://xdw2141.cn/2021/09/17/图像处理/OpenCV/20210917/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/17/20210917/" rel="prev" title="2021.09.17">
+      <i class="fa fa-chevron-left"></i> 2021.09.17
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">头文件引入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">一个简单的图片显示函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sobel%E7%AE%97%E5%AD%90"><span class="nav-number">2.1.</span> <span class="nav-text">sobel算子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scharr%E7%AE%97%E5%AD%90"><span class="nav-number">2.2.</span> <span class="nav-text">Scharr算子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#laplacian%E7%AE%97%E5%AD%90"><span class="nav-number">2.3.</span> <span class="nav-text">laplacian算子</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Y.X"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Y.X</p>
+  <div class="site-description" itemprop="description">面包会有的，牛奶会有的，一切都会有的。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ShiYuXinNa" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ShiYuXinNa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xdw2141@163.com" title="E-Mail → mailto:xdw2141@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Y.X</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共1.5k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'AXo64hoYkTm8EhMC9oQApTp6-gzGzoHsz',
+      appKey     : 'ep1zonA4xq9BlQWmmKsz6TjQ',
+      placeholder: "各位道友，请举手发言",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
