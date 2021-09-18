@@ -28,7 +28,7 @@
 <meta property="og:description" content="OpenCV">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-17T15:26:48.889Z">
-<meta property="article:modified_time" content="2021-09-17T15:57:46.951Z">
+<meta property="article:modified_time" content="2021-09-18T14:13:22.207Z">
 <meta property="article:author" content="Y.X">
 <meta name="twitter:card" content="summary">
 
@@ -182,10 +182,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-09-17 23:26:48 / 修改时间：23:57:46" itemprop="dateCreated datePublished" datetime="2021-09-17T23:26:48+08:00">2021-09-17</time>
+              <time title="创建时间：2021-09-17 23:26:48" itemprop="dateCreated datePublished" datetime="2021-09-17T23:26:48+08:00">2021-09-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-18 22:13:22" itemprop="dateModified" datetime="2021-09-18T22:13:22+08:00">2021-09-18</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -250,7 +256,8 @@ res = np.vstack((img1, img2, img3))     #纵向
 <h1 id="色值分割与组合"><a href="#色值分割与组合" class="headerlink" title="色值分割与组合"></a>色值分割与组合</h1><pre><code>b, g, r = cv2.split(img)
 cv2.merge((b,g,r))
 </code></pre>
-<h1 id="BGR图像处理-（RGB值）"><a href="#BGR图像处理-（RGB值）" class="headerlink" title="BGR图像处理 （RGB值）"></a>BGR图像处理 （RGB值）</h1><h2 id="只保留R"><a href="#只保留R" class="headerlink" title="只保留R"></a>只保留R</h2><pre><code>cc[:,:,0] = 0
+<h1 id="BGR图像处理-（RGB值）"><a href="#BGR图像处理-（RGB值）" class="headerlink" title="BGR图像处理 （RGB值）"></a>BGR图像处理 （RGB值）</h1><p>##灰度图转换<br>    cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)</p>
+<h2 id="只保留R"><a href="#只保留R" class="headerlink" title="只保留R"></a>只保留R</h2><pre><code>cc[:,:,0] = 0
 cc[:,:,1] = 0
 </code></pre>
 <h2 id="只保留G"><a href="#只保留G" class="headerlink" title="只保留G"></a>只保留G</h2><pre><code>cc[:,:,0] = 0
@@ -295,9 +302,11 @@ img1 = cv2.resize(img,(0,0),fx=2,fy=2)
 </code></pre>
 <h2 id="图像融合-R-Ax1-＋-Bx2-b-需要尺寸相同"><a href="#图像融合-R-Ax1-＋-Bx2-b-需要尺寸相同" class="headerlink" title="图像融合 R = Ax1 ＋ Bx2 + b 需要尺寸相同"></a>图像融合 R = Ax1 ＋ Bx2 + b 需要尺寸相同</h2><pre><code>R = cv2.addWeighted(x1 , A , x2 , B , b)
 </code></pre>
-<h1 id="图像阈值"><a href="#图像阈值" class="headerlink" title="图像阈值"></a>图像阈值</h1><pre><code> #scr:只能输入单通道图像 一般为灰度图 thresh：阈值 maxval：最大值 type 二值操作类型
- res , dst =cv2.threshold(scr,thresh,maxval,type)
- #ret：阈值thresh：输出图
+<h1 id="图像阈值"><a href="#图像阈值" class="headerlink" title="图像阈值"></a>图像阈值</h1><pre><code> res , dst =cv2.threshold(scr,thresh,maxval,type)
+
+
+ #scr:只能输入单通道图像 一般为灰度图 thresh：阈值 maxval：最大值 type 二值操作类型
+ #res：阈值  thresh：输出图
 
 #亮的-&gt;最亮 暗的-&gt;最暗
 ret , thresh1 = cv2.threshold(img, 127 , 255 , cv2.THRESH_BINARY)
@@ -430,10 +439,183 @@ cv2.convertScaleAbs(img)
 <h1 id="Canny边缘检测"><a href="#Canny边缘检测" class="headerlink" title="Canny边缘检测"></a>Canny边缘检测</h1><ol>
 <li>使用高斯滤波器，以平滑图像，滤除噪声。</li>
 <li>计算图像中每个像素点的梯度强度和方向。</li>
-<li>应用非极大值抑制，以消除边缘检测带来的杂散响应。</br>线性插值法： M（q） = w * M（g2） + （1-w）* M（g1）</br>w = distance（q,g2) / distance (g1,g2) </br>为了简化计算，由于一个像素周围有8个像素，把一个像素的梯度方向离散为8个方向，这样只需要计算前后，不用插值。</li>
+<li>应用非极大值抑制，以消除边缘检测带来的杂散响应。</li>
 <li>应用双阈值检测来确定真实和潜在的边缘。</li>
 <li>通过抑制孤立的弱边缘最终完成边缘检测。</li>
 </ol>
+<h2 id="非极大值抑制"><a href="#非极大值抑制" class="headerlink" title="非极大值抑制"></a>非极大值抑制</h2><ol>
+<li>线性插值法： M（q） = w * M（g2） + （1-w）* M（g1）</br>w = distance（q,g2) / distance (g1,g2) </li>
+<li>为了简化计算，由于一个像素周围有8个像素，把一个像素的梯度方向离散为8个方向，这样只需要计算前后，不用插值。</li>
+</ol>
+<h2 id="双阈值检测"><a href="#双阈值检测" class="headerlink" title="双阈值检测"></a>双阈值检测</h2><ul>
+<li>梯度值&gt;maxVal:处理为边界</li>
+<li>minVal&lt;梯度值&lt;maxVal：连有边界保留，其他舍弃</li>
+<li>梯度值&lt;minVal：舍弃</li>
+</ul>
+<h2 id="Code-3"><a href="#Code-3" class="headerlink" title="Code:"></a>Code:</h2><pre><code>cv2.Canny(img,minVal,maxVal)
+</code></pre>
+<blockquote>
+<p>&#8194;minVal,maxVal值越小图像，线条越丰富，噪音点越多。值越小，线条越少。</p>
+</blockquote>
+<p>#图像轮廓#</p>
+<h2 id="轮廓检测"><a href="#轮廓检测" class="headerlink" title="轮廓检测"></a>轮廓检测</h2><pre><code>cv2.findContours(img,mode,method)
+</code></pre>
+<blockquote>
+<p>&#8194;输入的图像应是8位单通道图像，且已转化成二值图像</p>
+</blockquote>
+<h3 id="mode-轮廓检索模式"><a href="#mode-轮廓检索模式" class="headerlink" title="mode:轮廓检索模式"></a>mode:轮廓检索模式</h3><ul>
+<li><strong>RETR_EXTERNAL：</strong>只检索最外面的轮廓；</li>
+<li><strong>RETR_LIST：</strong>检索所有的轮廓，并将其保存到一条链表当中；</li>
+<li><strong>RETR_CCOMP</strong>：检索所有的轮廓，并将他们组织为两层：顶层是各部分的外界边界，第二层是空洞的边界；</li>
+<li><strong>RETR_TREE：</strong>检索所有的轮廓，并重构嵌套轮廓的整个层次；</li>
+</ul>
+<blockquote>
+<p>&#8194;推荐使用最后一种检测模式</p>
+</blockquote>
+<h3 id="method-轮廓逼近的方法"><a href="#method-轮廓逼近的方法" class="headerlink" title="method:轮廓逼近的方法"></a>method:轮廓逼近的方法</h3><ul>
+<li><strong>CHAIN_APPROX_NONE：</strong>以Freeman链码的方式输出轮廓，所有其他方法输出多边形（顶点的序列）</li>
+<li><strong>CHAIN_APPROX_SIMPLE：</strong>压缩水平的、垂直的和斜的部分，函数只保留他们的终点部分</li>
+</ul>
+<h3 id="Code-4"><a href="#Code-4" class="headerlink" title="Code"></a>Code</h3><pre><code># 图像读取
+img3 = cv2.imread(&#39;img.jpg&#39;)
+# 图像灰度处理
+gray = cv2.cvtColor(img3,cv2.COLOR_BGR2GRAY)
+# 阈值处理 转换成二值图
+res , thresh = cv2.threshold(gray,127,255,cv2.THRESH_BINARY)
+# 获取轮廓参数
+contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+# 图像复制 ， 否则原图会变
+draw_img = img3.copy()
+# 传入绘制图像，轮廓，轮廓索引，第几个轮廓 默认-1（全部轮廓） 1：一个图形轮廓...，颜色模式 BGR值，线条厚度
+res = cv2.drawContours(draw_img,contours,-1,(0, 0, 255),2)
+</code></pre>
+<blockquote>
+<p>&#8194;轮廓绘制图像应是三通道图像，传入获取的contiours列表，线条宽度如果为-1，则为填充模式。</p>
+</blockquote>
+<h2 id="轮廓特征"><a href="#轮廓特征" class="headerlink" title="轮廓特征"></a>轮廓特征</h2><pre><code># 指定第几个轮廓图形
+cnt0 = contours[0]
+# 计算面积
+c1 = cv2.contourArea(cnt0)
+# 计算周长 ， True表示闭合的
+c3 = cv2.arcLength(cnt0,True)
+</code></pre>
+<h2 id="轮廓近似"><a href="#轮廓近似" class="headerlink" title="轮廓近似"></a>轮廓近似</h2><pre><code># 指定第几个轮廓图形
+cnt0 = contours[1]
+# 边界值，可以自己设定，一般用公式，系数越小越接近原轮廓
+epsilon = 0.1*cv2.arcLength(cnt0,True)
+# 得到轮廓近似后的矩阵
+approx = cv2.approxPolyDP(cnt0,epsilon,True)
+# 图像复制
+draw_im = img3.copy()
+# 画轮廓
+res2 = cv2.drawContours(draw_im,[approx],-1,(159, 204, 45),2)
+# 显示轮廓
+cv_show(&quot;res&quot;,res2)
+</code></pre>
+<h2 id="外接图形"><a href="#外接图形" class="headerlink" title="外接图形"></a>外接图形</h2><h3 id="外接矩形"><a href="#外接矩形" class="headerlink" title="外接矩形"></a>外接矩形</h3><pre><code># 获取轮廓0的左上角坐标及宽高
+x, y, w, h = cv2.boundingRect(contours[0])
+# 画出轮廓外接矩形
+imm = cv2.rectangle(img3,(x,y),(x+w,y+h),(0,0,255),2)
+</code></pre>
+<h3 id="外接圆"><a href="#外接圆" class="headerlink" title="外接圆"></a>外接圆</h3><pre><code># 获取轮廓0的圆心坐标和半径 
+(x,y), radius = cv2.minEnclosingCircle(contours[0])
+# 坐标和圆心数据整型化
+center, radius = (int(x),int(y)), int(radius)
+# 画出轮廓外接圆
+immm = cv2.circle(img3,center, radius, (0, 0, 255),2)
+</code></pre>
+<h2 id="模板匹配"><a href="#模板匹配" class="headerlink" title="模板匹配"></a>模板匹配</h2><blockquote>
+<p>&#8194;将模板放到原图上进行一个像素一个像素对比，然后将在每个像素点模板对比的度量值生成一个矩阵，根据模板匹配模式选择最相关的像素点。假如原图形是 <strong>A×B</strong> 大小，而模板是 <strong>a×b</strong> 大小，则输出结果的矩阵是 <strong>（A-a+1）×（B-b+1）</strong>（见 <a target="_blank" rel="noopener" href="http://www.opencv.org.cn/opencvdoc/2.3.2/html/doc/tutorials/imgproc/histograms/template_matching/template_matching.html#id2">参考文档</a>）</p>
+</blockquote>
+<pre><code>res = cv2.matchTemplate(img,template,mode)
+</code></pre>
+<h3 id="mode："><a href="#mode：" class="headerlink" title="mode："></a>mode：</h3><ul>
+<li>TM_CCOEFF：计算相关系数，计算出来的值越大，越相关；</li>
+<li>TM_SQDIFF：计算平方不同，计算出来的值越小，越相关；</li>
+<li>TM_CCORR： 计算相关性，计算出来的值越小，越相关；</li>
+<li>TM_CCORR_NORMED： 计算归一化相关系数，计算出来的值越接近1，越相关；</li>
+<li>TM_SQDIFF_NORMED：计算归一化平方不同，计算出来的值越接近0，越相关；</li>
+<li>TM_CCORR_NORMED： 计算归一化相关性，计算出来的值越接近1，越相关；</li>
+</ul>
+<h3 id="Code："><a href="#Code：" class="headerlink" title="Code："></a>Code：</h3><pre><code># 读取原图片灰色图
+img = cv2.imread(&#39;woman.jpg&#39;,0)
+# 读取模板灰色图
+template = cv2.imread(&#39;face.jpg&#39;,0)
+# 获取模板高和宽
+templateH, templateW = template.shape[:2]
+# 模板匹配输出相关矩阵
+res = cv2.matchTemplate(img,template,cv2.TM_SQDIFF_NORMED)
+# 获取矩阵最大值，最小值及相关位置
+minVal, maxVal, min_loc, max_loc = cv2.minMaxLoc(res)
+# 根据匹配模式 获取左上角坐标
+top_left = min_loc
+# 获取右下角坐标 shape格式是（H，W） 矩阵像素排列（x，y）
+bottom_right = (top_left[0]+templateW,top_left[1]+templateH)
+# 在原图像灰度图上画矩形,后两个参数表示颜色和线宽
+cv2.rectangle(img,top_left,bottom_right,0,1)
+# 输出模板匹配度量值矩阵 121表示1，2，1 一行两列 的第一个图像 
+# cmap=&#39;gray&#39;：用灰度图表示
+plt.subplot(121),plt.imshow(res,cmap=&#39;gray&#39;)
+# 隐藏坐标轴
+plt.xticks([]),plt.yticks([])
+# 输出原图像带矩阵的灰度图
+plt.subplot(122),plt.imshow(img,cmap=&#39;gray&#39;)
+plt.xticks([]),plt.yticks([])
+# plt.imshow()函数负责对图像进行处理，并显示其格式。
+# plt.show()则是将plt.imshow()处理后的函数显示出来。
+plt.show()
+</code></pre>
+<h4 id="匹配多个对象"><a href="#匹配多个对象" class="headerlink" title="匹配多个对象"></a>匹配多个对象</h4><pre><code># 读取原图片灰色图
+img = cv2.imread(&#39;woman.jpg&#39;,0)
+# 读取模板灰色图
+template = cv2.imread(&#39;face.jpg&#39;,0)
+# 获取模板高和宽
+templateH, templateW = template.shape[:2]
+# 模板匹配输出相关矩阵
+res1 = cv2.matchTemplate(img,template,cv2.TM_CCOEFF_NORMED)
+# 设置阈值
+thresh = 0.47
+# 获取匹配度至少为47%的坐标 np.where:满足条件输出坐标
+loc = np.where(res1 &gt;= maxVal - 0.0001)
+# 按所有的坐标画矩形
+for i in zip(*loc[::-1]):
+bottom_right = (i[0]+templateW,top_left[1]+templateH)
+cv2.rectangle(img4,i,bottom_right,255,1)
+# 显示图像（一个自用函数）
+cv_show(&#39;dd&#39;,img4)
+</code></pre>
+<h1 id="图像金字塔"><a href="#图像金字塔" class="headerlink" title="图像金字塔"></a>图像金字塔</h1><h2 id="高斯金字塔"><a href="#高斯金字塔" class="headerlink" title="高斯金字塔"></a>高斯金字塔</h2><h3 id="向下采样方法（缩小）"><a href="#向下采样方法（缩小）" class="headerlink" title="向下采样方法（缩小）###"></a>向下采样方法（缩小）###</h3><ul>
+<li>将Gi与高斯内核卷积</li>
+<li>将所有偶数行和列去除</li>
+</ul>
+</BR>
+
+<pre><code>       |   1   4   6   4   1 |
+       |   4  16  24  16   4 |         
+1/16 * |   6  24  36  24   6 |
+       |   4  16  24  16   4 |
+       |   1   4   6   4   1 |  
+</code></pre>
+<h4 id="Code：-1"><a href="#Code：-1" class="headerlink" title="Code："></a>Code：</h4><pre><code>cv2.pyrDown(img)  
+</code></pre>
+<h3 id="向上采样方法（放大）"><a href="#向上采样方法（放大）" class="headerlink" title="向上采样方法（放大）###"></a>向上采样方法（放大）###</h3><pre><code>                                        |  10   0  30   0 |
+       |  10  30  |      ————\          |   0   0   0   0 |
+       |  56  96  |      ————/          |  56   0  96   0 |
+                                        |   0   0   0   0 |
+</code></pre>
+<ol>
+<li>将图像在每个方向扩大为原来的两倍，新增的行和列以0填充。</li>
+<li>使用先前同样的内核（x4）与放大后的图像卷积，获得近似值。</li>
+</ol>
+<h4 id="Code：-2"><a href="#Code：-2" class="headerlink" title="Code："></a>Code：</h4><pre><code>v2.pyrUp(img)  
+</code></pre>
+<h2 id="拉普拉斯金字塔"><a href="#拉普拉斯金字塔" class="headerlink" title="拉普拉斯金字塔"></a>拉普拉斯金字塔</h2><h3 id="公式："><a href="#公式：" class="headerlink" title="公式："></a>公式：</h3><blockquote>
+<p>&#8194;Li = Gi - PyrUp(PyrUp(Gi))</p>
+</blockquote>
+<h3 id="Code：-3"><a href="#Code：-3" class="headerlink" title="Code："></a>Code：</h3><pre><code>down = cv2.pyrDown(img)
+down_up = cv2.pyrUp(down)
+L1 = img - down_up
+</code></pre>
 
     </div>
 
@@ -476,8 +658,8 @@ cv2.convertScaleAbs(img)
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/09/17/20210917/" rel="prev" title="2021.09.17">
-      <i class="fa fa-chevron-left"></i> 2021.09.17
+    <a href="/2021/09/17/%E6%97%A5%E5%BF%97/202109/" rel="prev" title="2021.09">
+      <i class="fa fa-chevron-left"></i> 2021.09
     </a></div>
       <div class="post-nav-item"></div>
     </div>
@@ -539,7 +721,7 @@ cv2.convertScaleAbs(img)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">头文件引入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">一个简单的图片显示函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">图像的属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%89%B2%E5%80%BC%E5%88%86%E5%89%B2%E4%B8%8E%E7%BB%84%E5%90%88"><span class="nav-number">4.</span> <span class="nav-text">色值分割与组合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BGR%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%EF%BC%88RGB%E5%80%BC%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">BGR图像处理 （RGB值）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E4%BF%9D%E7%95%99R"><span class="nav-number">5.1.</span> <span class="nav-text">只保留R</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E4%BF%9D%E7%95%99G"><span class="nav-number">5.2.</span> <span class="nav-text">只保留G</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E4%BF%9D%E7%95%99B"><span class="nav-number">5.3.</span> <span class="nav-text">只保留B</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E8%B0%83%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">视频调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%B1%95%E7%A4%BA"><span class="nav-number">7.</span> <span class="nav-text">视频展示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BE%B9%E6%B2%BF%E5%A1%AB%E5%85%85"><span class="nav-number">8.</span> <span class="nav-text">边沿填充</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%B3%95"><span class="nav-number">8.1.</span> <span class="nav-text">复制法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E6%B3%95"><span class="nav-number">8.2.</span> <span class="nav-text">反射法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E6%B3%951"><span class="nav-number">8.3.</span> <span class="nav-text">反射法1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E5%8C%85%E8%A3%85%E6%B3%95"><span class="nav-number">8.4.</span> <span class="nav-text">外包装法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E9%87%8F%E6%B3%95"><span class="nav-number">8.5.</span> <span class="nav-text">常量法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97"><span class="nav-number">9.</span> <span class="nav-text">数值计算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%83%8F%E7%B4%A0%E4%BF%AE%E6%94%B9"><span class="nav-number">9.1.</span> <span class="nav-text">像素修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E8%9E%8D%E5%90%88-R-Ax1-%EF%BC%8B-Bx2-b-%E9%9C%80%E8%A6%81%E5%B0%BA%E5%AF%B8%E7%9B%B8%E5%90%8C"><span class="nav-number">9.2.</span> <span class="nav-text">图像融合 R &#x3D; Ax1 ＋ Bx2 + b 需要尺寸相同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%98%88%E5%80%BC"><span class="nav-number">10.</span> <span class="nav-text">图像阈值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%B9%B3%E6%BB%91%E5%A4%84%E7%90%86"><span class="nav-number">11.</span> <span class="nav-text">图像平滑处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%87%E5%80%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.1.</span> <span class="nav-text">均值滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%86%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.2.</span> <span class="nav-text">方框滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.3.</span> <span class="nav-text">高斯滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.4.</span> <span class="nav-text">中值滤波</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BD%A2%E6%80%81%E5%AD%A6%E6%93%8D%E4%BD%9C"><span class="nav-number">12.</span> <span class="nav-text">形态学操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%85%90%E8%9A%80"><span class="nav-number">12.1.</span> <span class="nav-text">腐蚀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%86%A8%E8%83%80"><span class="nav-number">12.2.</span> <span class="nav-text">膨胀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E8%BF%90%E7%AE%97%E4%B8%8E%E9%97%AD%E8%BF%90%E7%AE%97"><span class="nav-number">12.3.</span> <span class="nav-text">开运算与闭运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E8%BF%90%E7%AE%97"><span class="nav-number">12.4.</span> <span class="nav-text">梯度运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BC%E5%B8%BD%E4%B8%8E%E9%BB%91%E5%B8%BD"><span class="nav-number">12.5.</span> <span class="nav-text">礼帽与黑帽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="nav-number">13.</span> <span class="nav-text">梯度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sobel%E7%AE%97%E5%AD%90"><span class="nav-number">13.1.</span> <span class="nav-text">sobel算子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code"><span class="nav-number">13.1.1.</span> <span class="nav-text">Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scharr%E7%AE%97%E5%AD%90"><span class="nav-number">13.2.</span> <span class="nav-text">Scharr算子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-1"><span class="nav-number">13.2.1.</span> <span class="nav-text">Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#laplacian%E7%AE%97%E5%AD%90"><span class="nav-number">13.3.</span> <span class="nav-text">laplacian算子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Code-2"><span class="nav-number">13.3.0.1.</span> <span class="nav-text">Code:</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Canny%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B"><span class="nav-number">14.</span> <span class="nav-text">Canny边缘检测</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6%E5%BC%95%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">头文件引入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">一个简单的图片显示函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">图像的属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%89%B2%E5%80%BC%E5%88%86%E5%89%B2%E4%B8%8E%E7%BB%84%E5%90%88"><span class="nav-number">4.</span> <span class="nav-text">色值分割与组合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BGR%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%EF%BC%88RGB%E5%80%BC%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">BGR图像处理 （RGB值）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E4%BF%9D%E7%95%99R"><span class="nav-number">5.1.</span> <span class="nav-text">只保留R</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E4%BF%9D%E7%95%99G"><span class="nav-number">5.2.</span> <span class="nav-text">只保留G</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E4%BF%9D%E7%95%99B"><span class="nav-number">5.3.</span> <span class="nav-text">只保留B</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E8%B0%83%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">视频调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%B1%95%E7%A4%BA"><span class="nav-number">7.</span> <span class="nav-text">视频展示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BE%B9%E6%B2%BF%E5%A1%AB%E5%85%85"><span class="nav-number">8.</span> <span class="nav-text">边沿填充</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%B3%95"><span class="nav-number">8.1.</span> <span class="nav-text">复制法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E6%B3%95"><span class="nav-number">8.2.</span> <span class="nav-text">反射法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E6%B3%951"><span class="nav-number">8.3.</span> <span class="nav-text">反射法1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E5%8C%85%E8%A3%85%E6%B3%95"><span class="nav-number">8.4.</span> <span class="nav-text">外包装法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E9%87%8F%E6%B3%95"><span class="nav-number">8.5.</span> <span class="nav-text">常量法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97"><span class="nav-number">9.</span> <span class="nav-text">数值计算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%83%8F%E7%B4%A0%E4%BF%AE%E6%94%B9"><span class="nav-number">9.1.</span> <span class="nav-text">像素修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E8%9E%8D%E5%90%88-R-Ax1-%EF%BC%8B-Bx2-b-%E9%9C%80%E8%A6%81%E5%B0%BA%E5%AF%B8%E7%9B%B8%E5%90%8C"><span class="nav-number">9.2.</span> <span class="nav-text">图像融合 R &#x3D; Ax1 ＋ Bx2 + b 需要尺寸相同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%98%88%E5%80%BC"><span class="nav-number">10.</span> <span class="nav-text">图像阈值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%B9%B3%E6%BB%91%E5%A4%84%E7%90%86"><span class="nav-number">11.</span> <span class="nav-text">图像平滑处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9D%87%E5%80%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.1.</span> <span class="nav-text">均值滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%86%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.2.</span> <span class="nav-text">方框滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.3.</span> <span class="nav-text">高斯滤波</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">11.4.</span> <span class="nav-text">中值滤波</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BD%A2%E6%80%81%E5%AD%A6%E6%93%8D%E4%BD%9C"><span class="nav-number">12.</span> <span class="nav-text">形态学操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%85%90%E8%9A%80"><span class="nav-number">12.1.</span> <span class="nav-text">腐蚀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%86%A8%E8%83%80"><span class="nav-number">12.2.</span> <span class="nav-text">膨胀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E8%BF%90%E7%AE%97%E4%B8%8E%E9%97%AD%E8%BF%90%E7%AE%97"><span class="nav-number">12.3.</span> <span class="nav-text">开运算与闭运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E8%BF%90%E7%AE%97"><span class="nav-number">12.4.</span> <span class="nav-text">梯度运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BC%E5%B8%BD%E4%B8%8E%E9%BB%91%E5%B8%BD"><span class="nav-number">12.5.</span> <span class="nav-text">礼帽与黑帽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E8%AE%A1%E7%AE%97"><span class="nav-number">13.</span> <span class="nav-text">梯度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sobel%E7%AE%97%E5%AD%90"><span class="nav-number">13.1.</span> <span class="nav-text">sobel算子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code"><span class="nav-number">13.1.1.</span> <span class="nav-text">Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scharr%E7%AE%97%E5%AD%90"><span class="nav-number">13.2.</span> <span class="nav-text">Scharr算子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-1"><span class="nav-number">13.2.1.</span> <span class="nav-text">Code:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#laplacian%E7%AE%97%E5%AD%90"><span class="nav-number">13.3.</span> <span class="nav-text">laplacian算子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Code-2"><span class="nav-number">13.3.0.1.</span> <span class="nav-text">Code:</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Canny%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B"><span class="nav-number">14.</span> <span class="nav-text">Canny边缘检测</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E6%9E%81%E5%A4%A7%E5%80%BC%E6%8A%91%E5%88%B6"><span class="nav-number">14.1.</span> <span class="nav-text">非极大值抑制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8C%E9%98%88%E5%80%BC%E6%A3%80%E6%B5%8B"><span class="nav-number">14.2.</span> <span class="nav-text">双阈值检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-3"><span class="nav-number">14.3.</span> <span class="nav-text">Code:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AE%E5%BB%93%E6%A3%80%E6%B5%8B"><span class="nav-number">14.4.</span> <span class="nav-text">轮廓检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mode-%E8%BD%AE%E5%BB%93%E6%A3%80%E7%B4%A2%E6%A8%A1%E5%BC%8F"><span class="nav-number">14.4.1.</span> <span class="nav-text">mode:轮廓检索模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#method-%E8%BD%AE%E5%BB%93%E9%80%BC%E8%BF%91%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">14.4.2.</span> <span class="nav-text">method:轮廓逼近的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-4"><span class="nav-number">14.4.3.</span> <span class="nav-text">Code</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AE%E5%BB%93%E7%89%B9%E5%BE%81"><span class="nav-number">14.5.</span> <span class="nav-text">轮廓特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AE%E5%BB%93%E8%BF%91%E4%BC%BC"><span class="nav-number">14.6.</span> <span class="nav-text">轮廓近似</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E6%8E%A5%E5%9B%BE%E5%BD%A2"><span class="nav-number">14.7.</span> <span class="nav-text">外接图形</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E6%8E%A5%E7%9F%A9%E5%BD%A2"><span class="nav-number">14.7.1.</span> <span class="nav-text">外接矩形</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E6%8E%A5%E5%9C%86"><span class="nav-number">14.7.2.</span> <span class="nav-text">外接圆</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D"><span class="nav-number">14.8.</span> <span class="nav-text">模板匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mode%EF%BC%9A"><span class="nav-number">14.8.1.</span> <span class="nav-text">mode：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code%EF%BC%9A"><span class="nav-number">14.8.2.</span> <span class="nav-text">Code：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D%E5%A4%9A%E4%B8%AA%E5%AF%B9%E8%B1%A1"><span class="nav-number">14.8.2.1.</span> <span class="nav-text">匹配多个对象</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%87%91%E5%AD%97%E5%A1%94"><span class="nav-number">15.</span> <span class="nav-text">图像金字塔</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E9%87%91%E5%AD%97%E5%A1%94"><span class="nav-number">15.1.</span> <span class="nav-text">高斯金字塔</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%91%E4%B8%8B%E9%87%87%E6%A0%B7%E6%96%B9%E6%B3%95%EF%BC%88%E7%BC%A9%E5%B0%8F%EF%BC%89"><span class="nav-number">15.1.1.</span> <span class="nav-text">向下采样方法（缩小）###</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Code%EF%BC%9A-1"><span class="nav-number">15.1.1.1.</span> <span class="nav-text">Code：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%91%E4%B8%8A%E9%87%87%E6%A0%B7%E6%96%B9%E6%B3%95%EF%BC%88%E6%94%BE%E5%A4%A7%EF%BC%89"><span class="nav-number">15.1.2.</span> <span class="nav-text">向上采样方法（放大）###</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Code%EF%BC%9A-2"><span class="nav-number">15.1.2.1.</span> <span class="nav-text">Code：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E9%87%91%E5%AD%97%E5%A1%94"><span class="nav-number">15.2.</span> <span class="nav-text">拉普拉斯金字塔</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%EF%BC%9A"><span class="nav-number">15.2.1.</span> <span class="nav-text">公式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code%EF%BC%9A-3"><span class="nav-number">15.2.2.</span> <span class="nav-text">Code：</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -613,7 +795,7 @@ cv2.convertScaleAbs(img)
   </div>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共1.5k字</span>
+  <span class="post-count">博客全站共3k字</span>
 </div>
 
 
