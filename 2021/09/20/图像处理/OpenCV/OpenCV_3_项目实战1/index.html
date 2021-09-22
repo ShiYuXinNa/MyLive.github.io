@@ -20,13 +20,15 @@
     var CONFIG = {"hostname":"xdw2141.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="通过对银行卡和数字模板进行匹配，输出银行卡卡号。">
+<meta property="og:type" content="article">
 <meta property="og:title" content="OpenCV_3_项目实战1">
 <meta property="og:url" content="https://xdw2141.cn/2021/09/20/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3_%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%981/index.html">
 <meta property="og:site_name" content="Y.X&#39;s Blog">
+<meta property="og:description" content="通过对银行卡和数字模板进行匹配，输出银行卡卡号。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-19T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-09-20T11:22:45.418Z">
+<meta property="article:modified_time" content="2021-09-22T14:19:16.393Z">
 <meta property="article:author" content="Y.X">
 <meta name="twitter:card" content="summary">
 
@@ -180,10 +182,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-09-20 00:00:00 / 修改时间：19:22:45" itemprop="dateCreated datePublished" datetime="2021-09-20T00:00:00+08:00">2021-09-20</time>
+              <time title="创建时间：2021-09-20 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-20T00:00:00+08:00">2021-09-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-22 22:19:16" itemprop="dateModified" datetime="2021-09-22T22:19:16+08:00">2021-09-22</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -223,10 +231,166 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <span id="more"></span>
+        <p>通过对银行卡和数字模板进行匹配，输出银行卡卡号。</p>
+<span id="more"></span>
+
+<h1 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h1><ol>
+<li>将数字模板进行处理，将0-9每个数字单独处理为固定大小的的图片模板，并存放在一个集合里。</li>
+<li>定位银行卡数字部分的区域，主要是对银行卡的灰度图进行形态学礼帽操作，突出银行卡的高亮部分。然后通过基于Sobel算子梯度计算，去除掉背景图案。接着通过形态学闭操作与阈值处理，将银行卡的数字区域处理成块以方便检测轮廓。最后通过判断轮廓外接矩形的长宽比以及长和宽的取值范围，判断出4大块的轮廓位置。</li>
+<li>将银行卡数字区域再进行轮廓判断，得出每个数字的区域图片。处理为与数字模板相同大小后，就可以进行模板匹配，输出最高匹配结果的数字。</li>
+</ol>
+<h1 id="Code："><a href="#Code：" class="headerlink" title="Code："></a>Code：</h1><pre><code>from typing import Counter
+import cv2 
+from imutils import contours as ctrs
+import matplotlib.pyplot as plt
+import numpy as np
+from numpy.lib.shape_base import dstack
+
+#一个简单的图片显示函数 
+def cv_show(name , img):
+    #图像的显示，也可以创建多个窗口
+    cv2.imshow(name,img)
+    #等待时间 ms级 0代表任意键终止
+    cv2.waitKey(0)
+    #关闭所有窗口
+    cv2.destroyAllWindows()
+
+# 读取图片 灰度图
+img         = cv2.imread(&#39;image/cart1.jpg&#39;,0)
+img_oringe  = cv2.imread(&#39;image/cart1.jpg&#39;)
+template0   = cv2.imread(&#39;image/number.jpg&#39;,0)
+template    = cv2.imread(&#39;image/number.jpg&#39;)
+
+################## 对模板的处理 ##################
+
+# 转换为二值图片
+Binary_template = cv2.threshold(template0, 10 , 255 , cv2.THRESH_BINARY_INV)[1]
+# 获取轮廓参数
+contours, hierarchy = cv2.findContours(Binary_template.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# 画出轮廓
+template_contours = cv2.drawContours(template.copy(),contours,-1,(0, 0, 255),2)
+# 轮廓排序  将轮廓从左到右依次排序
+contours = ctrs.sort_contours(contours,method =&#39;left-to-right&#39;)[0] 
+
+# 创建数字模板字典 每个索引对应一个数字的模板 
+digits = &#123;&#125;
+# 枚举每一个轮廓
+for i,n in enumerate(contours):
+    # 得到轮廓的外接矩形坐标
+    x, y, w, h = cv2.boundingRect(n)
+    # 在原图上切出对应矩形位置
+    roi = template0[y:y+h, x:x+w]
+    # 大小重置
+    roi = cv2.resize(roi,(57,88))
+    # cv_show(&#39;roi&#39;, roi)
+    # 载入字典 每个数字对应一个模板
+    digits[i] = roi
 
 
+################## 原图片处理 ##################
 
+# 初始化卷积核
+rectkernel = cv2.getStructuringElement(cv2.MORPH_RECT,(9,3))
+sqkernel = cv2.getStructuringElement(cv2.MORPH_RECT,(12,3))
+
+
+# 读取输入图像，预处理为宽高比不变 宽变为width的图片
+width = 400
+img_shape = (width, int(width/img.shape[1]*img.shape[0]))
+img = cv2.resize(img,img_shape)
+img_oringe = cv2.resize(img_oringe,img_shape)
+
+# 形态学礼帽操作 突出明亮区域
+img = cv2.morphologyEx(img,cv2.MORPH_TOPHAT,rectkernel)
+
+# sobel算子的梯度计算
+img_SobelX = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=3) 
+img_SobelX = cv2.convertScaleAbs(img_SobelX)
+ 
+    img_SobelY = cv2.Sobel(img,cv2.CV_64F,0,1,ksize=3)
+img_SobelY = cv2.convertScaleAbs(img_SobelY)
+
+img = cv2.addWeighted(img_SobelX,0.5,img_SobelY,0.5,0)
+
+
+###### 获取轮廓 #########
+# 形态学闭操作 先膨胀后腐蚀，获取数字块
+img1 = cv2.morphologyEx(img, cv2.MORPH_CLOSE,sqkernel)
+
+# 阈值处理 THRESH_OTSU会自动寻找合适的阈值，适合双峰，需要把阈值参数设为0
+img1 = cv2.threshold(img1,0,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+#cv_show(&#39;thresh Image&#39;,thresh)
+
+# 获取大致轮廓
+img1_contours = cv2.findContours(img1.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+img2 = cv2.drawContours(img_oringe.copy(),img1_contours,-1,(0,0,255),2)
+
+
+locs = []
+
+# 遍历轮廓 寻找合适的区域轮廓
+for i,n in enumerate(img1_contours):
+    # 画出每个轮廓的外接矩形
+    (x,y,w,h) = cv2.boundingRect(n)
+    # 宽高比
+    ar = w/float(h)
+    # 根据宽高比，选择合适的区域
+    if ar &gt; 2.5 and ar &lt; 3.5 :
+        if (w &lt; 75 and w &gt; 60) and ( h &gt; 20 and h &lt; 35) :
+            locs.append((x,y,w,h))
+# 轮廓位置排序
+locs.sort(key= lambda x:x[0])
+
+for (x, y, w, h) in locs :
+    cv2.rectangle(img_oringe,(x,y),(x+w,y+h),(0,0,255),2)
+
+# 输出列表
+groupOutput = []
+
+################## 模板匹配：##################
+for (i,((x, y, w, h))) in enumerate(locs):
+
+    # 将每一个轮廓往外扩一点点 以便判断
+    group = img[y-5 : y+h+5, x-5 : x+w+5]
+    # 阈值处理 二值化
+    group = cv2.threshold(group,0,255,cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+    # 获取轮廓信息
+    group_contours = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    # 轮廓排序
+    group_contours = ctrs.sort_contours(group_contours,method =&#39;left-to-right&#39;)[0] 
+
+    # 匹配每一个数字
+    for j in group_contours:
+        # 找到当前数字的轮廓，resize合适的大小
+        (x,y,w,h) = cv2.boundingRect(j)
+        # 在每个小轮廓图片上切出对应矩形位置
+        roi = group[y:y+h, x:x+w]
+        # 大小重置
+        roi = cv2.resize(roi,(57,88))
+        roi = cv2.threshold(roi.copy(), 10 ,255 ,cv2.THRESH_BINARY_INV)[1]
+
+        # 模板匹配得分
+        scores = []
+
+        # 在模板中计算各个数字匹配度
+        for digit, digitROI in digits.items():
+            # 模板匹配
+            result = cv2.matchTemplate(roi, digitROI, cv2.TM_CCOEFF)
+            (_, score, _, _) = cv2.minMaxLoc(result)
+            scores.append(score)
+        
+        # 得到最合适的数字
+        groupOutput.append(str(np.argmax(scores)))
+    groupOutput.append(&#39; &#39;)
+
+print(&#39;您的银行卡号为：&#39;, &#39;&#39;.join(x for x in groupOutput))
+</code></pre>
+<h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><blockquote>
+<p>&#8194; 对于一些背景图案复杂的银行卡，处理后可能会使待匹配的银行卡数字模糊或是多个数字粘合在一起，最终导致输出数字产生误差或是多输出数字。</p>
+</blockquote>
+<blockquote>
+<p>&#8194;源项目链接：<a href = "https://github.com/ShiYuXinNa/OpenCV_items/tree/main/BankCartOCR"> BankCartOCR <a/></p>
+</blockquote>
 
     </div>
 
@@ -335,6 +499,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">思路：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Code%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">Code：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">总结：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -350,14 +515,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -410,7 +575,7 @@
   </div>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共6.2k字</span>
+  <span class="post-count">博客全站共7.7k字</span>
 </div>
 
 
