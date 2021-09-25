@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xdw2141.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="OpenCV图像旋转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenCV_3">
+<meta property="og:url" content="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/index.html">
+<meta property="og:site_name" content="Y.X&#39;s Blog">
+<meta property="og:description" content="OpenCV图像旋转">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/img.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/wps4.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141118842.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141139614.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925142455463.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925151815533.png">
+<meta property="article:published_time" content="2021-09-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-25T14:02:37.785Z">
+<meta property="article:author" content="Y.X">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/img.png">
+
+<link rel="canonical" href="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OpenCV_3 | Y.X's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Y.X's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenCV_3
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-17 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-17T00:00:00+08:00">2021-09-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-25 22:02:37" itemprop="dateModified" datetime="2021-09-25T22:02:37+08:00">2021-09-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">图像处理</span></a>
+                </span>
+                  .
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/" itemprop="url" rel="index"><span itemprop="name">OpenCV</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>OpenCV图像旋转</p>
+<span id="more"></span>
+
+<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>将图像通过与旋转矩阵M相乘，使原图按固定中心点旋转固定角度。旋转后，图像的大小将发生变化，同时产生多余背景，并由黑色填充。旋转a°后图片大小如下图所示。</p>
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/img.png" style="zoom:150%;" />
+
+<p>对于一个绕原点(0, 0)旋转的图形，它的旋转矩阵可以简写为：</p>
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/wps4.jpg" alt="img" style="zoom: 150%;" />
+
+<p>但要实现绕原图像中心旋转则需要用如下旋转矩阵：</p>
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141118842.png" alt="image-20210925141118842" style="zoom:80%;" />
+
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141139614.png" alt="image-20210925141139614" style="zoom:80%;" />
+
+<p>其中scale是表示矩阵支持旋转和放缩，一般设为1。第三列是图像旋转之后中心位置平移量。</p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>可以由OpenCV中的<code>cv2.getRotationMatrix2D</code>函数得到所要求的旋转矩阵，再由<code>cv2.warpAffine</code>得出旋转变换后的矩形。</p>
+<h2 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h2><blockquote>
+<p>将图片顺时针旋转90°</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cv_show(<span class="string">&#x27;image1&#x27;</span>, img)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line"><span class="comment"># 生成旋转矩阵：旋转中心，旋转角度，缩放比例</span></span><br><span class="line">M = cv2.getRotationMatrix2D((w/<span class="number">2</span>,h/<span class="number">2</span>),<span class="number">90</span>,<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 进行旋转变换</span></span><br><span class="line">img = cv2.warpAffine(img.copy(),M,(w,h))</span><br><span class="line">cv_show(<span class="string">&#x27;image2&#x27;</span>,img) </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925142455463.png" alt="image-20210925142455463"></p>
+<h2 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h2><blockquote>
+<p>由旋转矩阵定义构造旋转矩阵M，将图片顺时针旋转90°</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&#x27;Images/img.jpg&#x27;</span>)</span><br><span class="line">cv_show(<span class="string">&#x27;image1&#x27;</span>, img)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义旋转矩阵M 及旋转角度</span></span><br><span class="line">M = np.zeros((<span class="number">2</span>,<span class="number">3</span>),dtype=np.float32)</span><br><span class="line">degree = <span class="number">90</span> <span class="comment"># 定义旋转90°</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#初始化旋转矩阵</span></span><br><span class="line">M[<span class="number">0</span>,<span class="number">0</span>] = np.cos(np.pi/<span class="number">180.0</span>*degree)</span><br><span class="line">M[<span class="number">1</span>,<span class="number">1</span>] = M[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">M[<span class="number">0</span>,<span class="number">1</span>] = np.sin(np.pi/<span class="number">180.0</span>*degree)</span><br><span class="line">M[<span class="number">1</span>,<span class="number">0</span>] = -M[<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line">M[<span class="number">0</span>,<span class="number">2</span>] = (<span class="number">1</span>-M[<span class="number">0</span>,<span class="number">0</span>])*w/<span class="number">2</span> - M[<span class="number">0</span>,<span class="number">1</span>]*h/<span class="number">2</span></span><br><span class="line">M[<span class="number">1</span>,<span class="number">2</span>] = M[<span class="number">0</span>,<span class="number">1</span>]*w/<span class="number">2</span>+(<span class="number">1</span>-M[<span class="number">0</span>,<span class="number">0</span>])*h/<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 进行旋转变换</span></span><br><span class="line">img = cv2.warpAffine(img.copy(),M,(w,h))</span><br><span class="line">cv_show(<span class="string">&#x27;image2&#x27;</span>,img) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>运行结果和Case1一样</p>
+</blockquote>
+<h2 id="Case-3"><a href="#Case-3" class="headerlink" title="Case 3"></a>Case 3</h2><blockquote>
+<p>显示原图大小，背景由红色填充，将中心点位置设置为旋转后新图形外接矩形中点坐标，将图像大小设置为旋转后新图形外接矩形的宽高。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&#x27;Images/img.jpg&#x27;</span>)</span><br><span class="line">cv_show(<span class="string">&#x27;image1&#x27;</span>, img)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line"><span class="comment"># 定义旋转矩阵M 及旋转角度</span></span><br><span class="line">M = np.zeros((<span class="number">2</span>,<span class="number">3</span>),*dtype*=np.float32)</span><br><span class="line">degree = <span class="number">45</span> <span class="comment"># 定义旋转45°</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#初始化旋转矩阵</span></span><br><span class="line">M[<span class="number">0</span>,<span class="number">0</span>] = np.cos(np.pi/<span class="number">180.0</span>*degree)</span><br><span class="line">M[<span class="number">1</span>,<span class="number">1</span>] = M[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">M[<span class="number">0</span>,<span class="number">1</span>] = np.sin(np.pi/<span class="number">180.0</span>*degree)</span><br><span class="line">M[<span class="number">1</span>,<span class="number">0</span>] = -M[<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line">M[<span class="number">0</span>,<span class="number">2</span>] = (<span class="number">1</span>-M[<span class="number">0</span>,<span class="number">0</span>])*w/<span class="number">2</span> - M[<span class="number">0</span>,<span class="number">1</span>]*h/<span class="number">2</span></span><br><span class="line">M[<span class="number">1</span>,<span class="number">2</span>] = M[<span class="number">0</span>,<span class="number">1</span>]*w/<span class="number">2</span>+(<span class="number">1</span>-M[<span class="number">0</span>,<span class="number">0</span>])*h/<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">###########################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旋转后外接矩形的宽和高</span></span><br><span class="line">new_w = <span class="built_in">int</span>(h*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">1</span>]) + w*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">0</span>]))</span><br><span class="line">new_h = <span class="built_in">int</span>(h*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">0</span>]) + w*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">1</span>]))</span><br><span class="line"><span class="comment"># 重新设定旋转中心偏移量</span></span><br><span class="line">M[<span class="number">0</span>,<span class="number">2</span>] += new_w/<span class="number">2</span> - w/<span class="number">2</span></span><br><span class="line">M[<span class="number">1</span>,<span class="number">2</span>] += new_h/<span class="number">2</span> - h/<span class="number">2</span></span><br><span class="line"></span><br><span class="line">img = cv2.warpAffine(img.copy(),M,(new_w,new_h),\</span><br><span class="line"></span><br><span class="line">   borderMode=cv2.BORDER_CONSTANT, borderValue=(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>))</span><br><span class="line"></span><br><span class="line">cv_show(<span class="string">&#x27;image2&#x27;</span>,img) </span><br></pre></td></tr></table></figure>
+
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925151815533.png" alt="image-20210925151815533" style="zoom: 50%;" /> 
+
+
+    </div>
+
+    
+    
+    
+
+ 	
+  	 <div>
+  	   <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------The<i class="fa fa-paw"></i>End-------------</div>
+    
+</div>
+  	 </div>
+ 	
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Y.X
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xdw2141.cn/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/" title="OpenCV_3">https://xdw2141.cn/2021/09/17/图像处理/OpenCV/OpenCV_3/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/17/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_1/" rel="next" title="OpenCV_1">
+      OpenCV_1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Case-1"><span class="nav-number">2.1.</span> <span class="nav-text">Case 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Case-2"><span class="nav-number">2.2.</span> <span class="nav-text">Case 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Case-3"><span class="nav-number">2.3.</span> <span class="nav-text">Case 3</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Y.X"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Y.X</p>
+  <div class="site-description" itemprop="description">面包会有的，牛奶会有的，一切都会有的。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ShiYuXinNa" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ShiYuXinNa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xdw2141@163.com" title="E-Mail → mailto:xdw2141@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">闽ICP备2021005699号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Y.X</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共11k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'AXo64hoYkTm8EhMC9oQApTp6-gzGzoHsz',
+      appKey     : 'ep1zonA4xq9BlQWmmKsz6TjQ',
+      placeholder: "各位道友，请举手发言",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
