@@ -27,16 +27,16 @@
 <meta property="og:site_name" content="Y.X&#39;s Blog">
 <meta property="og:description" content="OpenCV图像旋转">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/img.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141118842.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141139614.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925142455463.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925151815533.png">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_3/img-16326257935391.png">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_3/image-20210925141118842-16326258266675.png">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_3/image-20210925141139614-16326258102023.png">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_3/image-20210925142455463-16326258616797.png">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_3/image-20210925151815533-16326258744889.png">
 <meta property="article:published_time" content="2021-09-24T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-09-25T14:11:59.717Z">
+<meta property="article:modified_time" content="2021-09-26T03:12:20.619Z">
 <meta property="article:author" content="Y.X">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/img.png">
+<meta name="twitter:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_3/img-16326257935391.png">
 
 <link rel="canonical" href="https://xdw2141.cn/2021/09/25/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/OpenCV/OpenCV_3/">
 
@@ -188,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-09-25 00:00:00 / 修改时间：22:11:59" itemprop="dateCreated datePublished" datetime="2021-09-25T00:00:00+08:00">2021-09-25</time>
+              <time title="创建时间：2021-09-25 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-25T00:00:00+08:00">2021-09-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-26 11:12:20" itemprop="dateModified" datetime="2021-09-26T11:12:20+08:00">2021-09-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -235,13 +241,10 @@
 <span id="more"></span>
 
 <h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>将图像通过与旋转矩阵M相乘，使原图按固定中心点旋转固定角度。旋转后，图像的大小将发生变化，同时产生多余背景，并由黑色填充。旋转a°后图片大小如下图所示。</p>
-<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/img.png" style="zoom:150%;" />
-
+<p><img src="../../../../../Git/Images/OpenCV_3/img-16326257935391.png"></p>
 <p>对于一个绕中心点(center.x, center.y)旋转的图形，它的旋转矩阵为：</p>
-<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141118842.png" alt="image-20210925141118842" style="zoom:80%;" />
-
-<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925141139614.png" alt="image-20210925141139614" style="zoom:80%;" />
-
+<p><img src="../../../../../Git/Images/OpenCV_3/image-20210925141118842-16326258266675.png"></p>
+<p><img src="../../../../../Git/Images/OpenCV_3/image-20210925141139614-16326258102023.png"></p>
 <p>其中scale是表示矩阵支持旋转和放缩，一般设为1。</p>
 <h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>可以由OpenCV中的<code>cv2.getRotationMatrix2D</code>函数得到所要求的旋转矩阵，再由<code>cv2.warpAffine</code>得出旋转变换后的矩形。</p>
 <h2 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h2><blockquote>
@@ -249,7 +252,7 @@
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cv_show(<span class="string">&#x27;image1&#x27;</span>, img)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line"><span class="comment"># 生成旋转矩阵：旋转中心，旋转角度，缩放比例</span></span><br><span class="line">M = cv2.getRotationMatrix2D((w/<span class="number">2</span>,h/<span class="number">2</span>),<span class="number">90</span>,<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 进行旋转变换</span></span><br><span class="line">img = cv2.warpAffine(img.copy(),M,(w,h))</span><br><span class="line">cv_show(<span class="string">&#x27;image2&#x27;</span>,img) </span><br></pre></td></tr></table></figure>
 
-<p><img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925142455463.png" alt="image-20210925142455463"></p>
+<p><img src="../../../../../Git/Images/OpenCV_3/image-20210925142455463-16326258616797.png"></p>
 <h2 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h2><blockquote>
 <p>由旋转矩阵定义构造旋转矩阵M，将图片顺时针旋转90°</p>
 </blockquote>
@@ -263,7 +266,7 @@
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">img = cv2.imread(<span class="string">&#x27;Images/img.jpg&#x27;</span>)</span><br><span class="line">cv_show(<span class="string">&#x27;image1&#x27;</span>, img)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line"><span class="comment"># 定义旋转矩阵M 及旋转角度</span></span><br><span class="line">M = np.zeros((<span class="number">2</span>,<span class="number">3</span>),*dtype*=np.float32)</span><br><span class="line">degree = <span class="number">45</span> <span class="comment"># 定义旋转45°</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#初始化旋转矩阵</span></span><br><span class="line">M[<span class="number">0</span>,<span class="number">0</span>] = np.cos(np.pi/<span class="number">180.0</span>*degree)</span><br><span class="line">M[<span class="number">1</span>,<span class="number">1</span>] = M[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">M[<span class="number">0</span>,<span class="number">1</span>] = np.sin(np.pi/<span class="number">180.0</span>*degree)</span><br><span class="line">M[<span class="number">1</span>,<span class="number">0</span>] = -M[<span class="number">0</span>,<span class="number">1</span>]</span><br><span class="line">M[<span class="number">0</span>,<span class="number">2</span>] = (<span class="number">1</span>-M[<span class="number">0</span>,<span class="number">0</span>])*w/<span class="number">2</span> - M[<span class="number">0</span>,<span class="number">1</span>]*h/<span class="number">2</span></span><br><span class="line">M[<span class="number">1</span>,<span class="number">2</span>] = M[<span class="number">0</span>,<span class="number">1</span>]*w/<span class="number">2</span>+(<span class="number">1</span>-M[<span class="number">0</span>,<span class="number">0</span>])*h/<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">###########################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 旋转后外接矩形的宽和高</span></span><br><span class="line">new_w = <span class="built_in">int</span>(h*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">1</span>]) + w*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">0</span>]))</span><br><span class="line">new_h = <span class="built_in">int</span>(h*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">0</span>]) + w*np.<span class="built_in">abs</span>(M[<span class="number">0</span>,<span class="number">1</span>]))</span><br><span class="line"><span class="comment"># 重新设定旋转中心偏移量</span></span><br><span class="line">M[<span class="number">0</span>,<span class="number">2</span>] += new_w/<span class="number">2</span> - w/<span class="number">2</span></span><br><span class="line">M[<span class="number">1</span>,<span class="number">2</span>] += new_h/<span class="number">2</span> - h/<span class="number">2</span></span><br><span class="line"></span><br><span class="line">img = cv2.warpAffine(img.copy(),M,(new_w,new_h),\</span><br><span class="line"></span><br><span class="line">   borderMode=cv2.BORDER_CONSTANT, borderValue=(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>))</span><br><span class="line"></span><br><span class="line">cv_show(<span class="string">&#x27;image2&#x27;</span>,img) </span><br></pre></td></tr></table></figure>
 
-<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210925151815533.png" alt="image-20210925151815533" style="zoom: 50%;" /> 
+<img src="../../../../../Git/Images/OpenCV_3/image-20210925151815533-16326258744889.png" style="zoom:50%;" />                                                                                             
 
 
     </div>
