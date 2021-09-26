@@ -47,13 +47,13 @@
 <meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_2/image-20210926171757629.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926194835340.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926195122456.png">
-<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_2/image-202109261955482799-16326702525331.png">
-<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/OpenCV_2/image-202109261959545189-16326703279633.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-202109261955482799.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-202109261959545189.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926200736750.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926201243764.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926232318582.png">
 <meta property="article:published_time" content="2021-09-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-09-26T15:32:14.150Z">
+<meta property="article:modified_time" content="2021-09-26T15:38:27.305Z">
 <meta property="article:author" content="Y.X">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926141338458.png">
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-26 23:32:14" itemprop="dateModified" datetime="2021-09-26T23:32:14+08:00">2021-09-26</time>
+                <time title="修改时间：2021-09-26 23:38:27" itemprop="dateModified" datetime="2021-09-26T23:38:27+08:00">2021-09-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -479,9 +479,11 @@
 <p><img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926195122456.png" alt="image-20210926195122456"></p>
 <p>​        每个特征点可以得到三个信息（x,y,σ,θ），即位置、尺度和方向。具有多个方向的关键点可以被复制成多份，然后将方向值分别赋给复制后的特征点，一个特征点就产生了多个坐标、尺度相等，但是方向不同的特征点。</p>
 <h4 id="生成特征描述"><a href="#生成特征描述" class="headerlink" title="生成特征描述"></a>生成特征描述</h4><p>​        在完成关键点的梯度计算后，使用直方图统计领域内橡素的梯度和方向。</p>
-<p><img src="../../../../../Git/Images/OpenCV_2/image-202109261955482799-16326702525331.png"></p>
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-202109261955482799.png"/>
+
 <p>​        为了保证特征矢量的旋转不变性，要以特征点为中心，在附近邻域内将坐标轴旋转θ角度，即将坐标轴旋转为特征点的主方向。</p>
-<p><img src="../../../../../Git/Images/OpenCV_2/image-202109261959545189-16326703279633.png"></p>
+<img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-202109261959545189.png"/>
+
 <p>​        旋转之后的主方向为中心取8x8的窗口，求每个像素的梯度幅值和方向，箭头方向代表梯度方向，长度代表梯度幅值，然后利用高斯窗口对其进行加权运算，最后在每个4x4的小块上绘制8个方向的梯度直方图，计算每个梯度方向的累加值，即可形成一个种子点，即每个特征的由4个种子点组成，每个种子点有8个方向的向量信息。</p>
 <p><img src="https://raw.githubusercontent.com/ShiYuXinNa/Images/main/img/image-20210926200736750.png" alt="image-20210926200736750"></p>
 <p>​        论文中建议对每个关键点使用4x4共16个种子点来描述，这样一个关键点就会产生128维的SIFT特征向量。</p>
