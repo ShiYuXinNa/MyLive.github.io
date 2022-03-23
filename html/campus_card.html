@@ -21,7 +21,6 @@
         window.onload=function() 
         {
             window.requestAnimationFrame(getDate)
-            window.requestAnimationFrame(vimText)
             window.requestAnimationFrame(CreateIma)
         }
         function getDate()
@@ -69,28 +68,15 @@
                 format: "CODE128",
                 displayValue: false,//是否在条形码下方显示文字
                 margin: 2
-            };
+           		 };
             JsBarcode(barcode, content, options); //原生JS方式
             // 生成二维码
             var qrcode = new QRCode(document.getElementById("qrcode"), {
                 width : 125,
                 height : 125});
             qrcode.makeCode("40194517535813449825");
-        }
-        function vimText() {
-  		    var aa = window.location.href.split("\?")[1]
-            var cc = aa.split("&")
-            for (var i=0;i<cc.length;i++)
-            {
-                var bb = cc[i].split("=")
-                switch (bb[0]){
-                case "name": document.getElementById("text1").innerHTML="姓名："+ decodeURI(bb[1]);break;
-                case "department":document.getElementById("text2").innerHTML="部门：" + decodeURI(bb[1]);break;
-                case "slogan": document.getElementById("text3").innerHTML=decodeURI(bb[1]);break;
-                case "QRCodeID": content=bb[1];break;
-                default :;
-                }
-            }
+        		}
+        
         }
     </script>
 </head>
