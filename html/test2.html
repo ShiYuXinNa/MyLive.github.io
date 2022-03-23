@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="Description" content=""/>
+    <meta name="Keywords" content=""/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Ajax测试天气预报API</title>
+
+</head>
+<body>
+
+    <h1>天气查询</h1>
+    <input type="text" placeholder="请输出你的地区邮编编码" value="1" id="tel"/>
+    <button id="ajax">确定</button>
+    <p>查询结果：<span id="reslut"></span></p>
+
+    <script type="text/javascript" src="//code.jQuery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $('#ajax').on('click',function(){
+            var $telValue=$('#tel').val();
+            if($telValue=="") {
+                alert('不能为空！');
+                return;
+            }
+            $.ajax({
+                type: 'GET',
+                dataType:'jsonp',
+                jsonp:'callback',                          
+                  jsonpCallback:'getName',
+                url: 'http://ykt.fzu.edu.cn:9001/ThirdWeb/GetServerDate',
+                beforeSend: function() {
+					          alert("发送之前：回执信息");
+                },
+                success: function(data){
+                    var reslutData=data;
+                    console.log(reslutData);
+					alert(reslutData);					
+                    $('#reslut').text("你查询的是:"+reslutData.code);
+                },				
+                error:function (e) {
+                    console.log("error："+e);
+
+                }
+               
+
+            })
+        })
+        
+    })
+    </script>
+</body>
+</html>
