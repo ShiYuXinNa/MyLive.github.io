@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xdw2141.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="ROS系统是一个开源的机器人操作系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS基础">
+<meta property="og:url" content="https://xdw2141.cn/2021/10/27/ROS/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Y.X&#39;s Blog">
+<meta property="og:description" content="ROS系统是一个开源的机器人操作系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/src=http%253A%252F%252Fupload-images.jianshu.io%252Fupload_images%252F8789591-0896a241c6afbef1.png&refer=http%253A%252F%252Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/src=http%253A%252F%252Fupload-images.jianshu.io%252Fupload_images%252F8789591-fa8cc306ce1b8a4d.png&refer=http%253A%252F%252Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg">
+<meta property="og:image" content="https://xdw2141.cn/2021/Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/image-20211027161647610.png">
+<meta property="article:published_time" content="2021-10-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-23T03:30:06.533Z">
+<meta property="article:author" content="Y.X">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xdw2141.cn/2021/Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/src=http%253A%252F%252Fupload-images.jianshu.io%252Fupload_images%252F8789591-0896a241c6afbef1.png&refer=http%253A%252F%252Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg">
+
+<link rel="canonical" href="https://xdw2141.cn/2021/10/27/ROS/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ROS基础 | Y.X's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Y.X's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2021/10/27/ROS/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ROS基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-27 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-27T00:00:00+08:00">2021-10-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-23 11:30:06" itemprop="dateModified" datetime="2022-03-23T11:30:06+08:00">2022-03-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ROS/" itemprop="url" rel="index"><span itemprop="name">ROS</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/10/27/ROS/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/27/ROS/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>ROS系统是一个开源的机器人操作系统。</p>
+<span id="more"></span>
+
+<h1 id="ROS特征"><a href="#ROS特征" class="headerlink" title="ROS特征"></a>ROS特征</h1><h2 id="一个目标"><a href="#一个目标" class="headerlink" title="一个目标"></a>一个目标</h2><ul>
+<li>提高机器人研发中的软件复用率</li>
+</ul>
+<h2 id="五个特点"><a href="#五个特点" class="headerlink" title="五个特点"></a>五个特点</h2><ul>
+<li><p>点对点的设计</p>
+</li>
+<li><p>多语言支持</p>
+<p>每个ROS的节点可以用不同的语言进行编程，节点之间的信息交互通过与语言无关的一个接口进行连接。</p>
+</li>
+<li><p>架构精简、集成度高</p>
+</li>
+<li><p>组件化工具包丰富</p>
+<p>具备很多功能强大的工具，比如仿真界面工具rviz，仿真环境gazebo，图形化显示工具rpt_plot等。</p>
+</li>
+<li><p>免费且开源</p>
+</li>
+</ul>
+<h2 id="四位一体"><a href="#四位一体" class="headerlink" title="四位一体"></a>四位一体</h2><ul>
+<li>ROS = 通讯机制 + 开发工具 + 应用功能 + 生态系统</li>
+</ul>
+<h1 id="ROS通讯"><a href="#ROS通讯" class="headerlink" title="ROS通讯"></a>ROS通讯</h1><p>ROS系统的通讯机制是以点对点进行通讯，ROS节点之间是以话题通讯和服务通讯两种方式为主，主要区别如下表：</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">话题通讯</th>
+<th align="center">服务通讯</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>同步性</strong></td>
+<td align="center">异步</td>
+<td align="center">同步</td>
+</tr>
+<tr>
+<td align="center"><strong>通信模型</strong></td>
+<td align="center">发布/订阅</td>
+<td align="center">服务器/客户端</td>
+</tr>
+<tr>
+<td align="center"><strong>底层协议</strong></td>
+<td align="center">ROSTCP/ROSUDP</td>
+<td align="center">ROSTCP/ROSUDP</td>
+</tr>
+<tr>
+<td align="center"><strong>反馈机制</strong></td>
+<td align="center">无</td>
+<td align="center">有</td>
+</tr>
+<tr>
+<td align="center"><strong>缓冲区</strong></td>
+<td align="center">有</td>
+<td align="center">无</td>
+</tr>
+<tr>
+<td align="center"><strong>实时性</strong></td>
+<td align="center">弱</td>
+<td align="center">强</td>
+</tr>
+<tr>
+<td align="center"><strong>节点关系</strong></td>
+<td align="center">多对多</td>
+<td align="center">一（server）对多</td>
+</tr>
+<tr>
+<td align="center"><strong>适用场景</strong></td>
+<td align="center">数据传输</td>
+<td align="center">逻辑处理</td>
+</tr>
+</tbody></table>
+<h2 id="话题通讯流程"><a href="#话题通讯流程" class="headerlink" title="话题通讯流程"></a>话题通讯流程</h2><p><img src="../../../../Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/src=http%253A%252F%252Fupload-images.jianshu.io%252Fupload_images%252F8789591-0896a241c6afbef1.png&refer=http%253A%252F%252Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg" alt="img"></p>
+<h3 id="step"><a href="#step" class="headerlink" title="step"></a>step</h3><ol>
+<li>Talker（发布者）注册</li>
+<li>Listener（订阅者）注册</li>
+<li>ROS Master（节点管理器）进行信息匹配</li>
+<li>Listener发送连接请求</li>
+<li>Talker确认连接请求</li>
+<li>建立网络连接</li>
+<li>Talker向Listener发布数据</li>
+</ol>
+<blockquote>
+<p>Node先在ROS Master注册，当某个Node向ROS Master请求一种“bar”类型的数据，则ROS Master就会找另一个正在布”bar”类型的数据Node，然后帮助这两个节点建立连接，在这过程中，第一个节点被称为Listener，第二个节点称为Talker。</p>
+</blockquote>
+<h2 id="服务通讯流程"><a href="#服务通讯流程" class="headerlink" title="服务通讯流程"></a>服务通讯流程</h2><p><img src="../../../../Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/src=http%253A%252F%252Fupload-images.jianshu.io%252Fupload_images%252F8789591-fa8cc306ce1b8a4d.png&refer=http%253A%252F%252Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg" alt="img"></p>
+<h3 id="step-1"><a href="#step-1" class="headerlink" title="step"></a>step</h3><ol>
+<li>Talker（服务器）注册</li>
+<li>Listener（客户端）注册</li>
+<li>ROS Master（节点管理器）进行信息匹配</li>
+<li>建立网络连接</li>
+<li>Talker向Listener发布服务应答数据</li>
+</ol>
+<blockquote>
+<p>相比话题通讯的一对一传递数据，服务通讯机制可以允许一个服务端向多个客户端发送数据。</p>
+</blockquote>
+<h2 id="通讯协议"><a href="#通讯协议" class="headerlink" title="通讯协议"></a>通讯协议</h2><h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><h3 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h3><h1 id="ROS文件系统"><a href="#ROS文件系统" class="headerlink" title="ROS文件系统"></a>ROS文件系统</h1><blockquote>
+<p>在ROS的文件系统中，它的工作目录结构主要分为<strong>Workspace-Package-Node</strong>，Workspace可以看作是一个工程项目，Package可以看作是一个模块，Node可以看作是一个进程，一般一个Package里包含的Node越多越好。</p>
+</blockquote>
+<p><img src="../../../../Git/Images/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/image-20211027161647610.png" alt="image-20211027161647610"></p>
+<h2 id="创建Workspace"><a href="#创建Workspace" class="headerlink" title="创建Workspace"></a><strong>创建Workspace</strong></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/ws/first_ws/src  # 创建工作空间</span><br><span class="line">cd first_ws  				# 进入第一个工作空间</span><br><span class="line">catkin_make                 # 编译（编译文件夹下必须存在src文件夹）</span><br><span class="line">source devel/setup.bash 	# 坏境</span><br><span class="line"><span class="meta">#</span><span class="bash"> 加入全局</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;source /home/yuxin/ws/first_ws/devel/setup.bash&quot;</span> &gt;&gt; ~/.bashrc</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">source</span> ~/.bashrc</span></span><br><span class="line">echo $ROS_PACKAGE_PATH 		# 检查环境变量</span><br><span class="line">sudo apt install tree		# 安装tree工具</span><br><span class="line">tree						# 查看结构</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建Package"><a href="#创建Package" class="headerlink" title="创建Package"></a><strong>创建Package</strong></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd src/</span><br><span class="line"><span class="meta">#</span><span class="bash"> catkin_create_pkg package depends 命令 包名 依赖的包名</span></span><br><span class="line">catkin_create_pkg hello_ros rospy rosmsg roscpp # 创建hello_ros的package，支持python开发，通信，c++开发</span><br><span class="line">catkin_make  # 再次编译</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建Node"><a href="#创建Node" class="headerlink" title="创建Node"></a>创建Node</h2><h3 id="安装Clion作为主要的ide"><a href="#安装Clion作为主要的ide" class="headerlink" title="安装Clion作为主要的ide"></a>安装Clion作为主要的ide</h3><h4 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install cmake</span><br><span class="line">sudo apt-get install bison</span><br><span class="line">sudo apt-get install library*</span><br><span class="line">sudo apt-get install libncurses5-dev</span><br><span class="line">sudo apt-get install g++</span><br><span class="line">sudo apt-get install kdelibs5-dev</span><br><span class="line">sudo apt-get install make</span><br></pre></td></tr></table></figure>
+
+<h4 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h4><p>前往Clion官网下载：<a target="_blank" rel="noopener" href="https://www.jetbrains.com/clion/download/#section=linux"> Clion for Linux</a> 安装包至工作目录下</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf Clion-xxxx.x.x/bin	# 解压安装包</span><br><span class="line">cd clion-xxxx.x.x/bin</span><br><span class="line">./clion.sh						# q</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source devel/setup.bash			# 加载开发环境</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="ROS常用命令"><a href="#ROS常用命令" class="headerlink" title="ROS常用命令"></a>ROS常用命令</h1><h2 id="ROS-shell命令"><a href="#ROS-shell命令" class="headerlink" title="ROS shell命令"></a>ROS shell命令</h2><table>
+<thead>
+<tr>
+<th align="center">命令</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">roscd [本地包名称[/子目录]]</td>
+<td align="center">移动到指定ROS软件包目录</td>
+</tr>
+<tr>
+<td align="center">rospack find [包名称]</td>
+<td align="center">找到包的位置</td>
+</tr>
+<tr>
+<td align="center">rosls [本地包名称[/子目录]]</td>
+<td align="center">显示ROS软件包的文件和目录</td>
+</tr>
+<tr>
+<td align="center">rosed</td>
+<td align="center">编辑ROS软件包文件</td>
+</tr>
+<tr>
+<td align="center">roscp</td>
+<td align="center">复制ROS软件包文件</td>
+</tr>
+<tr>
+<td align="center">rospd</td>
+<td align="center">添加目录至ROS目录索引</td>
+</tr>
+<tr>
+<td align="center">rosd</td>
+<td align="center">显示ROS目录索引中的目录</td>
+</tr>
+</tbody></table>
+<h2 id="ROS执行命令"><a href="#ROS执行命令" class="headerlink" title="ROS执行命令"></a>ROS执行命令</h2><table>
+<thead>
+<tr>
+<th align="center">命令</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">roscore</td>
+<td align="center">开启Master</td>
+</tr>
+<tr>
+<td align="center">rosrun [package_name] [node_name]</td>
+<td align="center">运行单个节点</td>
+</tr>
+<tr>
+<td align="center">rosrun [package_name] [node_name] __name:=[node_new_name]</td>
+<td align="center">重命名节点</td>
+</tr>
+<tr>
+<td align="center">roslaunch</td>
+<td align="center">运行多个节点及设置运行选项</td>
+</tr>
+<tr>
+<td align="center">rosclean</td>
+<td align="center">检查/删除ROS日志文件</td>
+</tr>
+</tbody></table>
+<h2 id="ROS信息命令"><a href="#ROS信息命令" class="headerlink" title="ROS信息命令"></a>ROS信息命令</h2><table>
+<thead>
+<tr>
+<th align="center">命令</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">rostopic</td>
+<td align="center">查看ROS话题信息</td>
+</tr>
+<tr>
+<td align="center">rosservice</td>
+<td align="center">查看ROS服务信息</td>
+</tr>
+<tr>
+<td align="center">rosnode</td>
+<td align="center">查看ROS节点信息</td>
+</tr>
+<tr>
+<td align="center">rosparam</td>
+<td align="center">确认和修改ROS参数信息</td>
+</tr>
+<tr>
+<td align="center">rosbag</td>
+<td align="center">记录和回放ROS消息</td>
+</tr>
+<tr>
+<td align="center">rosmsg</td>
+<td align="center">显示ROS消息类型</td>
+</tr>
+<tr>
+<td align="center">rossrv</td>
+<td align="center">显示ROS服务类型</td>
+</tr>
+<tr>
+<td align="center">rosversion</td>
+<td align="center">显示ROS功能包的版本信息</td>
+</tr>
+<tr>
+<td align="center">roswtf</td>
+<td align="center">检查ROS系统</td>
+</tr>
+</tbody></table>
+<h3 id="rostopic-选项"><a href="#rostopic-选项" class="headerlink" title="rostopic [选项]"></a><strong>rostopic [选项]</strong></h3><p><strong>list</strong> - 列出活动话题<br><strong>echo [话题名称]</strong> - 实时显示指定话题的消息内容<br><strong>find [类型名称]</strong> - 显示使用指定类型的消息的话题<br><strong>type [话题名称]</strong> - 显示指定话题的消息类型<br><strong>bw [话题名称]</strong> - 显示指定话题的消息类型<br><strong>hz [话题名称]</strong> - 显示指定话题的消息数据发布周期<br><strong>info [话题名称]</strong> - 显示指定话题的消息<br><strong>pub [话题名称] [消息类型] [参数]</strong> - 用指定的话题名称发布消息，许多时候另开一个终端操作 例：rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist – ‘[2.0, 0.0, 0.0]”[0.0, 0.0, 0.0]’</p>
+<h3 id="rosservice-选项"><a href="#rosservice-选项" class="headerlink" title="rosservice [选项]"></a>rosservice [选项]</h3><p><strong>list</strong> - 显示活动的服务信息<br><strong>info [服务名称]</strong> - 显示指定服务的信息<br><strong>type [服务名称]</strong> - 显示服务类型<br><strong>find [服务类型]</strong> - 查找指定服务类型的服务<br><strong>uri [服务名称]</strong> - 显示ROSRPC URI服务<br><strong>args [服务名称]</strong> - 显示服务参数<br><strong>call [服务名称] [参数]</strong> - 用输入的参数请求服务，通常用于测试服务</p>
+<h3 id="rosnode-选项"><a href="#rosnode-选项" class="headerlink" title="rosnode [选项]"></a>rosnode [选项]</h3><p><strong>list</strong> - 查看活动的节点列表<br><strong>ping [节点名称]</strong> - 与指定的节点进行连接测试<br><strong>info [节点名称]</strong> - 查看指定节点的信息<br><strong>machine [PC名称或IP]</strong> - 查看该PC中运行的节点列表<br><strong>kill [节点名称]</strong> - 停止指定节点的运行<br><strong>cleanup</strong> - 删除失连节点的注册信息</p>
+<h3 id="rosparam-参数"><a href="#rosparam-参数" class="headerlink" title="rosparam [参数]"></a>rosparam [参数]</h3><p><strong>list</strong> - 查看参数列表<br><strong>get [参数名称]</strong> - 获取参数值<br><strong>set [参数名称]</strong> - 设置参数值<br><strong>dump [文件名称]</strong> - 将参数保存到指定文件（.yaml)<br><strong>load [文件名称]</strong> - 获取保存在指定文件中的参数，经常使用。<br><strong>delete [参数名称]</strong> - 删除参数</p>
+<h3 id="rosmsg-参数"><a href="#rosmsg-参数" class="headerlink" title="rosmsg [参数]"></a>rosmsg [参数]</h3><p><strong>list</strong> - 显示所有消息<br><strong>show [消息名称]</strong> - 显示指定消息<br><strong>md5 [消息名称]</strong> - 显示md5sum<br><strong>package [功能包名称]</strong> - 显示用于指定功能包的所有消息<br><strong>packages</strong> - 显示使用消息的所有功能包</p>
+<h3 id="rossrv-参数"><a href="#rossrv-参数" class="headerlink" title="rossrv [参数]"></a>rossrv [参数]</h3><p><strong>list</strong> -显示所有服务<br><strong>show [服务名称]</strong> - 显示指定的服务信息<br><strong>md5 [服务名称]</strong> - 显示md5sum<br><strong>package [功能包名称]</strong> - 显示指定的功能包中用到的所有服务<br><strong>packages</strong> - 显示使用服务的所有功能包</p>
+<h3 id="rosbag-参数"><a href="#rosbag-参数" class="headerlink" title="rosbag [参数]"></a>rosbag [参数]</h3><p><strong>record [选项] [话题名称]</strong> - 将指定话题的消息记录到bag文件<br><strong>info [文件名称]</strong> - 查看bag文件的信息<br><strong>play [文件名称]</strong> - 回放指定的bag文件，这个使用玩的也多。<br><strong>compress [文件名称]</strong> - 压缩指定的bag文件<br><strong>decompress [文件名称]</strong> - 解压指定的bag文件<br><strong>filter [输入文件] [输出文件] [选项]</strong> - 生成一个删除了指定内容的新的bag文件<br><strong>reindex bag [文件名称]</strong> - 刷新索引<br><strong>check bag [文件名称]</strong> - 检查指定的bag文件是否能在当前系统中回放<br><strong>fix [输入文件] [输出文件] [选项]</strong> - 将由于版本不同而无法回放的bag文件修改可以回放的文件</p>
+<h3 id="ROS-catkin命令"><a href="#ROS-catkin命令" class="headerlink" title="ROS catkin命令"></a>ROS catkin命令</h3><p><strong>catkin_create_pkg</strong> - 自动生成功能包（示例命令：catkin_create_pkg [功能包名称] [依赖性功能包1] [依赖性功能包2]….）。<br><strong>catkin_make</strong> - 基于catkin构建系统的构建 （示例：catkin_make –pkg [包名] 只构建一部分功能包）。<br><strong>catkin_eclipse</strong> - 对于用catkin构建系统生成的功能包进行修改，使其能在Eclipse环境中使用。<br><strong>catkin_prepare_release</strong> - 在发布时用到的日志整理和版本标记。<br><strong>catkin_generate_changelog</strong> - 在发布时生成或更新CHANGLOG.rst文件。<br><strong>catkin_init_workspace</strong> - 初始化catkin构建系统的工作目录。<br><strong>catkin_find</strong> - 搜素catkin，找到并显示工作空间。</p>
+<h3 id="ROS功能包命令"><a href="#ROS功能包命令" class="headerlink" title="ROS功能包命令"></a>ROS功能包命令</h3><p><strong>rospack [选项] [功能包名称]</strong> - 查看与ROS功能包相关的信息(可以使用find, list, depend-on, depends和profile等选项)。<br><strong>rosinstall</strong> - 安装ROS附加功能包。<br><strong>rosdep [选项]</strong> - 安装该功能包的依赖性文件（check, install, init, update）。<br><strong>roslocate [选项] [功能包名称]</strong> - ROS功能包信息相关命令（可用的选项是info, vcs, type, uri和repo等）。</p>
+<p><strong>小海龟测试</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">roscore  # 启动节点管理器</span><br><span class="line">rosrun turtlesim turtlesim_node 	# 打开turtlesim功能包turtlesim_node节点</span><br><span class="line">rosrun turtlesim turtle_teleop_key  # 运行键盘库功能</span><br><span class="line">rqt_graph	# x</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+ 	
+  	 <div>
+  	   <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------The<i class="fa fa-paw"></i>End-------------</div>
+    
+</div>
+  	 </div>
+ 	
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Y.X
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xdw2141.cn/2021/10/27/ROS/ROS%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/" title="ROS基础">https://xdw2141.cn/2021/10/27/ROS/ROS系统学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/27/%E6%A0%91%E8%8E%93%E6%B4%BE/linux%E5%91%BD%E4%BB%A4/" rel="prev" title="Linux命令">
+      <i class="fa fa-chevron-left"></i> Linux命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/29/ROS/PyQt/" rel="next" title="PyQt">
+      PyQt <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ROS%E7%89%B9%E5%BE%81"><span class="nav-number">1.</span> <span class="nav-text">ROS特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">一个目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E4%B8%AA%E7%89%B9%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">五个特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E4%BD%8D%E4%B8%80%E4%BD%93"><span class="nav-number">1.3.</span> <span class="nav-text">四位一体</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ROS%E9%80%9A%E8%AE%AF"><span class="nav-number">2.</span> <span class="nav-text">ROS通讯</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%9D%E9%A2%98%E9%80%9A%E8%AE%AF%E6%B5%81%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">话题通讯流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#step"><span class="nav-number">2.1.1.</span> <span class="nav-text">step</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%80%9A%E8%AE%AF%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">服务通讯流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#step-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">step</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.3.</span> <span class="nav-text">通讯协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP"><span class="nav-number">2.3.1.</span> <span class="nav-text">TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPC"><span class="nav-number">2.3.2.</span> <span class="nav-text">RPC</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ROS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">ROS文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAWorkspace"><span class="nav-number">3.1.</span> <span class="nav-text">创建Workspace</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAPackage"><span class="nav-number">3.2.</span> <span class="nav-text">创建Package</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BANode"><span class="nav-number">3.3.</span> <span class="nav-text">创建Node</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Clion%E4%BD%9C%E4%B8%BA%E4%B8%BB%E8%A6%81%E7%9A%84ide"><span class="nav-number">3.3.1.</span> <span class="nav-text">安装Clion作为主要的ide</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85"><span class="nav-number">3.3.1.2.</span> <span class="nav-text">下载安装包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">3.3.1.3.</span> <span class="nav-text">安装</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ROS%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">ROS常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS-shell%E5%91%BD%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">ROS shell命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">ROS执行命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS%E4%BF%A1%E6%81%AF%E5%91%BD%E4%BB%A4"><span class="nav-number">4.3.</span> <span class="nav-text">ROS信息命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rostopic-%E9%80%89%E9%A1%B9"><span class="nav-number">4.3.1.</span> <span class="nav-text">rostopic [选项]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rosservice-%E9%80%89%E9%A1%B9"><span class="nav-number">4.3.2.</span> <span class="nav-text">rosservice [选项]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rosnode-%E9%80%89%E9%A1%B9"><span class="nav-number">4.3.3.</span> <span class="nav-text">rosnode [选项]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rosparam-%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.4.</span> <span class="nav-text">rosparam [参数]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rosmsg-%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.5.</span> <span class="nav-text">rosmsg [参数]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rossrv-%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.6.</span> <span class="nav-text">rossrv [参数]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rosbag-%E5%8F%82%E6%95%B0"><span class="nav-number">4.3.7.</span> <span class="nav-text">rosbag [参数]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS-catkin%E5%91%BD%E4%BB%A4"><span class="nav-number">4.3.8.</span> <span class="nav-text">ROS catkin命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E5%8A%9F%E8%83%BD%E5%8C%85%E5%91%BD%E4%BB%A4"><span class="nav-number">4.3.9.</span> <span class="nav-text">ROS功能包命令</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Y.X"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Y.X</p>
+  <div class="site-description" itemprop="description">面包会有的，牛奶会有的，一切都会有的。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ShiYuXinNa" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ShiYuXinNa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xdw2141@163.com" title="E-Mail → mailto:xdw2141@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">闽ICP备2021005699号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Y.X</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共31.2k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'AXo64hoYkTm8EhMC9oQApTp6-gzGzoHsz',
+      appKey     : 'ep1zonA4xq9BlQWmmKsz6TjQ',
+      placeholder: "各位道友，请举手发言",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

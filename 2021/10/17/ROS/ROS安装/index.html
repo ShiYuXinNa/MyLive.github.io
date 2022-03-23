@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xdw2141.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="树莓派ROS系统安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS系统安装">
+<meta property="og:url" content="https://xdw2141.cn/2021/10/17/ROS/ROS%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="Y.X&#39;s Blog">
+<meta property="og:description" content="树莓派ROS系统安装">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-23T03:30:03.261Z">
+<meta property="article:author" content="Y.X">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xdw2141.cn/2021/10/17/ROS/ROS%E5%AE%89%E8%A3%85/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ROS系统安装 | Y.X's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Y.X's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2021/10/17/ROS/ROS%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ROS系统安装
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-17 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-17T00:00:00+08:00">2021-10-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-23 11:30:03" itemprop="dateModified" datetime="2022-03-23T11:30:03+08:00">2022-03-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ROS/" itemprop="url" rel="index"><span itemprop="name">ROS</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/10/17/ROS/ROS%E5%AE%89%E8%A3%85/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/17/ROS/ROS%E5%AE%89%E8%A3%85/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>树莓派ROS系统安装</p>
+<span id="more"></span>
+
+<h1 id="安装ubuntu18-04-4的桌面"><a href="#安装ubuntu18-04-4的桌面" class="headerlink" title="安装ubuntu18.04.4的桌面"></a>安装ubuntu18.04.4的桌面</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 备份源</span></span><br><span class="line">sudo cp -r <span class="regexp">/etc/</span>apt<span class="regexp">/sources.list /</span>etc<span class="regexp">/apt/</span>sources.list.bf</span><br><span class="line"><span class="comment"># 替换源</span></span><br><span class="line">sudo sed -i -e <span class="string">&#x27;s/https\?:\/\/[^/]*\/ubuntu/http:\/\/mirrors.ustc.edu.cn\/ubuntu/g&#x27;</span> <span class="regexp">/etc/</span>apt/sources.list</span><br><span class="line"><span class="comment"># 更新源</span></span><br><span class="line">sudo apt update</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="替换源"><a href="#替换源" class="headerlink" title="替换源"></a>替换源</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">deb https://mirrors.ustc.edu.cn/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse</span><br><span class="line"></span><br><span class="line">deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update #更新源</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装ROS-melodic桌面版"><a href="#安装ROS-melodic桌面版" class="headerlink" title="安装ROS melodic桌面版"></a>安装ROS melodic桌面版</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c &#x27;. /etc/lsb-release &amp;&amp; echo &quot;deb http://mirrors.ustc.edu.cn/ros/ubuntu/ $DISTRIB_CODENAME main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&#x27;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-key adv --keyserver &#x27;hkp://keyserver.ubuntu.com:80&#x27; --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install ros-melodic-desktop-full # 安装桌面版</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装rqt工具"><a href="#安装rqt工具" class="headerlink" title="安装rqt工具"></a>安装rqt工具</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ros-melodic-rqt*</span><br></pre></td></tr></table></figure>
+
+<h2 id="初始化rosdep"><a href="#初始化rosdep" class="headerlink" title="初始化rosdep"></a>初始化rosdep</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rosdep init</span><br><span class="line">rosdep init</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo: rosdep: command not found</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-rosdep</span><br><span class="line">sudo rosdep init</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ERROR: cannot download default sources list from:</span><br><span class="line">https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list</span><br><span class="line">Website may be down.</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决办法1"><a href="#解决办法1" class="headerlink" title="解决办法1"></a>解决办法1</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打开hosts文件</span></span><br><span class="line">sudo gedit /etc/hosts</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在文件尾巴添加</span></span><br><span class="line">151.101.84.133 raw.githubusercontent.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 保存退出</span></span><br><span class="line">sudo rosdep init</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题3"><a href="#问题3" class="headerlink" title="问题3"></a>问题3</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR: default sources list file already exists: /etc/ros/rosdep/sources.list.d/20-default.list Please delete if you wish to re-initialize</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决办法-1"><a href="#解决办法-1" class="headerlink" title="解决办法"></a>解决办法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rm /etc/ros/rosdep/sources.list.d/20-default.list</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题4"><a href="#问题4" class="headerlink" title="问题4"></a>问题4</h3><p>rosdep update失败</p>
+<h3 id="解决办法1-1"><a href="#解决办法1-1" class="headerlink" title="解决办法1"></a>解决办法1</h3><p>跟换网络，个人热点等——玄学</p>
+<h3 id="解决办法2"><a href="#解决办法2" class="headerlink" title="解决办法2"></a>解决办法2</h3><p>使用*ghproxy.com/*网站对github资源代理加速，在所有的下载url前加上前缀。</p>
+<ol>
+<li>在/usr/lib/python2.7/dist-packages/rosdep2/sources_list.py中的<code>download_rosdep_data</code>函数中添加</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=&quot;https://ghproxy.com/&quot;+url</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在下列文件中的各个位置同样加上前缀</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit /usr/lib/python2.7/dist-packages/rosdistro/__init__.py 			# 68行</span><br><span class="line">sudo gedit /usr/lib/python2.7/dist-packages/rosdep2/gbpdistro_support.py 	# 204行</span><br><span class="line">sudo gedit /usr/lib/python2.7/dist-packages/rosdep2/gbpdistro_support.py	# 36行</span><br><span class="line">sudo gedit /usr/lib/python2.7/dist-packages/rosdep2/sources_list.py			# 72行</span><br><span class="line">sudo gedit /usr/lib/python2.7/dist-packages/rosdep2/rep3.py 				# 39行</span><br><span class="line">sudo gedit /usr/lib/python2.7/dist-packages/rosdistro/manifest_provider/github.py # 68行和119行</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装ros对应驱动功能包rplidar"><a href="#安装ros对应驱动功能包rplidar" class="headerlink" title="安装ros对应驱动功能包rplidar"></a>安装ros对应驱动功能包rplidar</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install ros-melodic-rplidar-ros</span><br></pre></td></tr></table></figure>
+
+<h1 id="激光雷达使用"><a href="#激光雷达使用" class="headerlink" title="激光雷达使用"></a>激光雷达使用</h1><h2 id="建立工作空间"><a href="#建立工作空间" class="headerlink" title="建立工作空间"></a>建立工作空间</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p  ~/turtlebot_ws/src</span><br><span class="line">cd   ~/turtlebot_ws/src</span><br><span class="line">git clone https://github.com/ncnynl/rplidar_ros.git # 下载官方驱动</span><br><span class="line">cd ..</span><br><span class="line">catkin_make # 编译</span><br></pre></td></tr></table></figure>
+
+<h2 id="添加环境变量"><a href="#添加环境变量" class="headerlink" title="添加环境变量"></a>添加环境变量</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo “<span class="keyword">source</span> ~<span class="regexp">/turtlebot_ws/</span>devel<span class="regexp">/setup.bash” &gt;&gt; ~/</span>.bashrc</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置端口"><a href="#配置端口" class="headerlink" title="配置端口"></a>配置端口</h2><h3 id="检查端口"><a href="#检查端口" class="headerlink" title="检查端口"></a>检查端口</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -l /dev |grep ttyUSB</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改端口权限"><a href="#修改端口权限" class="headerlink" title="修改端口权限"></a>修改端口权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+rw /dev/ttyUSB0</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h2><h4 id="运行rplidar和并打开rviz查看"><a href="#运行rplidar和并打开rviz查看" class="headerlink" title="运行rplidar和并打开rviz查看"></a>运行rplidar和并打开rviz查看</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 激光数据可视化</span></span><br><span class="line">roslaunch rplidar_ros view_rplidar.launch</span><br></pre></td></tr></table></figure>
+
+<h4 id="运行rplidar和查看测试应用"><a href="#运行rplidar和查看测试应用" class="headerlink" title="运行rplidar和查看测试应用"></a>运行rplidar和查看测试应用</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">roslaunch rplidar_ros rplidar.launch</span><br><span class="line"><span class="meta">#</span><span class="bash"> 新终端打开</span></span><br><span class="line">rosrun rplidar_ros rplidarNodeClient</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用别名"><a href="#使用别名" class="headerlink" title="使用别名"></a>使用别名</h2><h3 id="建立别名，运行脚本创建别名"><a href="#建立别名，运行脚本创建别名" class="headerlink" title="建立别名，运行脚本创建别名"></a>建立别名，运行脚本创建别名</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ .<span class="regexp">/scripts/</span>create_udev_rules.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用别名，在启动的launch文件，修改使用别名"><a href="#使用别名，在启动的launch文件，修改使用别名" class="headerlink" title="使用别名，在启动的launch文件，修改使用别名"></a>使用别名，在启动的launch文件，修改使用别名</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;param <span class="attribute">name</span>=<span class="string">&quot;serial_port&quot;</span> <span class="attribute">type</span>=<span class="string">&quot;string&quot;</span> <span class="attribute">value</span>=<span class="string">&quot;/dev/rplidar&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用激光雷达进行SLAM定位建图"><a href="#使用激光雷达进行SLAM定位建图" class="headerlink" title="使用激光雷达进行SLAM定位建图"></a>使用激光雷达进行SLAM定位建图</h1><p>SLAM,simultaneous localization and mapping，即时定位和地图构建。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖包</span></span><br><span class="line">sudo apt install ros-melodic-fake-localization ros-melodic-map-server ros-melodic-hector-slam ros-melodic-gmapping ros-melodic-slam-gmapping ros-melodic-open-karto ros-melodic-slam-karto</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 编辑slam launch</span></span><br><span class="line">cd /opt/ros/melodic/share/rplidar_ros/launch/</span><br><span class="line">sudo vim hectormapping.launch</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">### ####</span></span></span><br><span class="line">&lt;launch&gt;</span><br><span class="line">        &lt;node pkg=&quot;tf&quot; type=&quot;static_transform_publisher&quot; name=&quot;link1_broadcaster&quot; args=&quot;1 0 0 0 0 0 base_link laser 100&quot;&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node pkg=&quot;hector_mapping&quot; type=&quot;hector_mapping&quot; name=&quot;hector_height_mapping&quot; output=&quot;screen&quot;&gt;</span><br><span class="line">                &lt;param name=&quot;scan_topic&quot; value=&quot;scan&quot; /&gt;</span><br><span class="line">                &lt;param name=&quot;base_frame&quot; value=&quot;base_link&quot; /&gt;</span><br><span class="line">                &lt;param name=&quot;odom_frame&quot; value=&quot;base_link&quot; /&gt;</span><br><span class="line">                &lt;param name=&quot;output_timing&quot; value=&quot;false&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;advertise_map_service&quot; value=&quot;true&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;use_tf_scan_transformation&quot; value=&quot;true&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;use_tf_pose_start_estimate&quot; value=&quot;false&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;pub_map_odom_transform&quot; value=&quot;true&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_with_known_poses&quot; value=&quot;false&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_pub_period&quot; value=&quot;0.5&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;update_factor_free&quot; value=&quot;0.45&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_update_distance_thresh&quot; value=&quot;0.02&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_update_angle_thresh&quot; value=&quot;0.1&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_resolution&quot; value=&quot;0.05&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_size&quot; value=&quot;1024&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_start_x&quot; value=&quot;0.5&quot;/&gt;</span><br><span class="line">                &lt;param name=&quot;map_start_y&quot; value=&quot;0.5&quot;/&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 编辑view_slam.launch</span></span><br><span class="line">sudo vim view_slam.launch</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">### ####</span></span></span><br><span class="line">&lt;launch&gt;</span><br><span class="line">        &lt;include file=&quot;$(find rplidar_ros)/launch/rplidar.launch&quot; /&gt;</span><br><span class="line">        &lt;include file=&quot;$(find rplidar_ros)/launch/hectormapping.launch&quot; /&gt;</span><br><span class="line">        &lt;node name=&quot;rviz&quot; pkg=&quot;rviz&quot; type=&quot;rviz&quot; args=&quot;-d $(find rplidar_ros)/rviz/slam.rviz&quot;&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">&lt;/launch&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 测试hector slam 并通过rviz展示</span></span><br><span class="line">roslaunch rplidar_ros view_slam.launch</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+ 	
+  	 <div>
+  	   <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------The<i class="fa fa-paw"></i>End-------------</div>
+    
+</div>
+  	 </div>
+ 	
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Y.X
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xdw2141.cn/2021/10/17/ROS/ROS%E5%AE%89%E8%A3%85/" title="ROS系统安装">https://xdw2141.cn/2021/10/17/ROS/ROS安装/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/17/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/tensorflow/tensorflow%E5%9F%BA%E7%A1%80/" rel="prev" title="tensorflow基础">
+      <i class="fa fa-chevron-left"></i> tensorflow基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/27/%E6%A0%91%E8%8E%93%E6%B4%BE/linux%E5%91%BD%E4%BB%A4/" rel="next" title="Linux命令">
+      Linux命令 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ubuntu18-04-4%E7%9A%84%E6%A1%8C%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">安装ubuntu18.04.4的桌面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E6%BA%90"><span class="nav-number">2.</span> <span class="nav-text">替换源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ROS-melodic%E6%A1%8C%E9%9D%A2%E7%89%88"><span class="nav-number">3.</span> <span class="nav-text">安装ROS melodic桌面版</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85rqt%E5%B7%A5%E5%85%B7"><span class="nav-number">3.1.</span> <span class="nav-text">安装rqt工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96rosdep"><span class="nav-number">3.2.</span> <span class="nav-text">初始化rosdep</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%981"><span class="nav-number">3.2.1.</span> <span class="nav-text">问题1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">3.2.2.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%982"><span class="nav-number">3.2.3.</span> <span class="nav-text">问题2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%951"><span class="nav-number">3.2.4.</span> <span class="nav-text">解决办法1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%983"><span class="nav-number">3.2.5.</span> <span class="nav-text">问题3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95-1"><span class="nav-number">3.2.6.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%984"><span class="nav-number">3.2.7.</span> <span class="nav-text">问题4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%951-1"><span class="nav-number">3.2.8.</span> <span class="nav-text">解决办法1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%952"><span class="nav-number">3.2.9.</span> <span class="nav-text">解决办法2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ros%E5%AF%B9%E5%BA%94%E9%A9%B1%E5%8A%A8%E5%8A%9F%E8%83%BD%E5%8C%85rplidar"><span class="nav-number">4.</span> <span class="nav-text">安装ros对应驱动功能包rplidar</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">激光雷达使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4"><span class="nav-number">5.1.</span> <span class="nav-text">建立工作空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">5.2.</span> <span class="nav-text">添加环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%AB%AF%E5%8F%A3"><span class="nav-number">5.3.</span> <span class="nav-text">配置端口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E7%AB%AF%E5%8F%A3"><span class="nav-number">5.3.1.</span> <span class="nav-text">检查端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%AB%AF%E5%8F%A3%E6%9D%83%E9%99%90"><span class="nav-number">5.3.2.</span> <span class="nav-text">修改端口权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">5.4.</span> <span class="nav-text">运行测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Crplidar%E5%92%8C%E5%B9%B6%E6%89%93%E5%BC%80rviz%E6%9F%A5%E7%9C%8B"><span class="nav-number">5.4.0.1.</span> <span class="nav-text">运行rplidar和并打开rviz查看</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8Crplidar%E5%92%8C%E6%9F%A5%E7%9C%8B%E6%B5%8B%E8%AF%95%E5%BA%94%E7%94%A8"><span class="nav-number">5.4.0.2.</span> <span class="nav-text">运行rplidar和查看测试应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%88%AB%E5%90%8D"><span class="nav-number">5.5.</span> <span class="nav-text">使用别名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%88%AB%E5%90%8D%EF%BC%8C%E8%BF%90%E8%A1%8C%E8%84%9A%E6%9C%AC%E5%88%9B%E5%BB%BA%E5%88%AB%E5%90%8D"><span class="nav-number">5.5.1.</span> <span class="nav-text">建立别名，运行脚本创建别名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%88%AB%E5%90%8D%EF%BC%8C%E5%9C%A8%E5%90%AF%E5%8A%A8%E7%9A%84launch%E6%96%87%E4%BB%B6%EF%BC%8C%E4%BF%AE%E6%94%B9%E4%BD%BF%E7%94%A8%E5%88%AB%E5%90%8D"><span class="nav-number">5.5.2.</span> <span class="nav-text">使用别名，在启动的launch文件，修改使用别名</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE%E8%BF%9B%E8%A1%8CSLAM%E5%AE%9A%E4%BD%8D%E5%BB%BA%E5%9B%BE"><span class="nav-number">6.</span> <span class="nav-text">使用激光雷达进行SLAM定位建图</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Y.X"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Y.X</p>
+  <div class="site-description" itemprop="description">面包会有的，牛奶会有的，一切都会有的。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ShiYuXinNa" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ShiYuXinNa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xdw2141@163.com" title="E-Mail → mailto:xdw2141@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">闽ICP备2021005699号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Y.X</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共31.2k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'AXo64hoYkTm8EhMC9oQApTp6-gzGzoHsz',
+      appKey     : 'ep1zonA4xq9BlQWmmKsz6TjQ',
+      placeholder: "各位道友，请举手发言",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
