@@ -26,9 +26,6 @@
             }
             $.ajax({
                 type: 'GET',
-                dataType:'jsonp',
-                jsonp:'callback',                          
-                  jsonpCallback:'getName',
                 url: 'http://ykt.fzu.edu.cn:9001/ThirdWeb/GetServerDate',
                 beforeSend: function() {
 					          alert("发送之前：回执信息");
