@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xdw2141.cn","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="PID控制文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电机控制">
+<meta property="og:url" content="https://xdw2141.cn/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Y.X&#39;s Blog">
+<meta property="og:description" content="PID控制文档">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-31T07:45:01.914Z">
+<meta property="article:author" content="Y.X">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xdw2141.cn/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>电机控制 | Y.X's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Y.X's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          电机控制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-30 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-30T00:00:00+08:00">2022-03-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-31 15:45:01" itemprop="dateModified" datetime="2022-03-31T15:45:01+08:00">2022-03-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ROS-Car/" itemprop="url" rel="index"><span itemprop="name">ROS_Car</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>PID控制文档</p>
+<span id="more"></span>
+
+<h1 id="PID控制"><a href="#PID控制" class="headerlink" title="PID控制"></a>PID控制</h1><p><strong>PID：</strong>比例Proportion、积分Integral和微分Derivative。主要分为位置式PID控制和增量式PID控制两种。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">Input --&gt; A((X))</span><br><span class="line">A--&gt;B[Proportion]</span><br><span class="line">A--&gt;C[Integral]</span><br><span class="line">A--&gt;D[Derivative]</span><br><span class="line">B--&gt;E((X))</span><br><span class="line">C--&gt;E</span><br><span class="line">D--&gt;E</span><br><span class="line">E--&gt;F[Object]</span><br><span class="line">F--&gt;G[Output]</span><br><span class="line">F--&gt;A</span><br></pre></td></tr></table></figure>
+
+<h2 id="位置式PID控制"><a href="#位置式PID控制" class="headerlink" title="位置式PID控制"></a>位置式PID控制</h2><h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><p>$$<br>u(k) = K_pe(k)+K_i\sum_{j=0}^{k}e(j)+K_d[e(k)-e(k-1)]<br>$$</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> min(a, b)               (a&lt;b? a:b)              <span class="comment">// 返回最小值</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> max(a, b)               (a&gt;b? a:b)              <span class="comment">// 返回最大值</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> limiter(x, a, b)        (min(max(x, a), b))     <span class="comment">// 限制x在[a,b]内</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">float</span> Kp_POS;       <span class="comment">// 比例系数</span></span><br><span class="line">    <span class="keyword">float</span> Ki_POS;       <span class="comment">// 积分系数</span></span><br><span class="line">    <span class="keyword">float</span> Kd_POS;       <span class="comment">// 微分系数</span></span><br><span class="line">    <span class="keyword">long</span> SumErr;        <span class="comment">// 累计误差</span></span><br><span class="line">    <span class="keyword">long</span> SumErr_Lim;	<span class="comment">// 累计误差上下限</span></span><br><span class="line">    <span class="keyword">int</span> LastErr;        <span class="comment">// e(k-1)</span></span><br><span class="line">    <span class="keyword">int</span> Max_range;      <span class="comment">// 输出最大值</span></span><br><span class="line">    <span class="keyword">int</span> Min_range;      <span class="comment">// 输出最小值</span></span><br><span class="line">&#125;PID_POS;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">* 位置式PID初始化 </span></span><br><span class="line"><span class="comment">* Kp、Ki、Kd: 输入控制参数；</span></span><br><span class="line"><span class="comment">* SumErr_L: 积分项的累积上下限</span></span><br><span class="line"><span class="comment">* Min_Num: 输出最小值，默认为0；</span></span><br><span class="line"><span class="comment">* Max_Num: 输出最大值，默认为0；</span></span><br><span class="line"><span class="comment">* 不设置Min_Num和Max_Num，则输出无限制。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PID_POS_Init</span><span class="params">(PID_POS *PID,<span class="keyword">float</span> Kp,<span class="keyword">float</span> Ki,<span class="keyword">float</span> Kd,<span class="keyword">long</span> SumErr_L = <span class="number">2147483647</span>,<span class="keyword">int</span> Min_Num = <span class="number">0</span>,<span class="keyword">int</span> Max_Num = <span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PID-&gt;Kp_POS = Kp;</span><br><span class="line">    PID-&gt;Ki_POS = Ki;</span><br><span class="line">    PID-&gt;Kd_POS = Kd;</span><br><span class="line">    PID-&gt;SumErr  = <span class="number">0</span>;</span><br><span class="line">    PID-&gt;SumErr_Lim = SumErr_L;</span><br><span class="line">    PID-&gt;LastErr = <span class="number">0</span>;</span><br><span class="line">    PID-&gt;Min_range = Min_Num;</span><br><span class="line">    PID-&gt;Max_range = Max_Num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">* 位置式PID控制</span></span><br><span class="line"><span class="comment">* targetValue: 	目标值；</span></span><br><span class="line"><span class="comment">* currentValue: 当前值。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">PID_POS_Contral</span><span class="params">(PID_POS *PID,<span class="keyword">int</span> targetValue,<span class="keyword">int</span> currentValue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> IErr = <span class="number">0</span>,DErr = <span class="number">0</span>,Out = <span class="number">0</span>;              	<span class="comment">// 积分项 微分项 输出</span></span><br><span class="line">    IErr = targetValue - currentValue;           	<span class="comment">// 当前误差 e(k)</span></span><br><span class="line">    PID-&gt;SumErr += IErr;        				    <span class="comment">// 累计误差 </span></span><br><span class="line">    PID-&gt;SumErr = limiter(PID-&gt;SumErr,-PID-&gt;SumErr_Lim,PID-&gt;SumErr_Lim);</span><br><span class="line">    DErr = IErr-PID-&gt;LastErr;   <span class="comment">// 两次误差差值(等时间调用 误差变化率近似为差) e(k)-e(k-1)</span></span><br><span class="line">    PID-&gt;LastErr = IErr;        				    <span class="comment">// 记录最后误差</span></span><br><span class="line"></span><br><span class="line">    Out = (<span class="keyword">int</span>)( PID-&gt;Kp_POS * IErr                 <span class="comment">// 比例项</span></span><br><span class="line">               + PID-&gt;Ki_POS * PID-&gt;SumErr          <span class="comment">// 积分项</span></span><br><span class="line">               + PID-&gt;Kd_POS * DErr );              <span class="comment">// 微分项</span></span><br><span class="line">    <span class="keyword">if</span>(PID-&gt;Min_range&lt;PID-&gt;Max_range) </span><br><span class="line">        Out = limiter(Out,PID-&gt;Min_range,PID-&gt;Max_range);</span><br><span class="line">    <span class="keyword">return</span> Out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="增量式PID控制"><a href="#增量式PID控制" class="headerlink" title="增量式PID控制"></a>增量式PID控制</h3><p>$$<br>\Delta u(k) = K_p \Delta e(k)+K_ie(k)+K_d[\Delta e(k)- \Delta e(k-1)]<br>$$<br>或<br>$$<br>\Delta u(k) = K_p [e(k)-e(k-1)]+K_ie(k)+K_d[e(k)- 2e(k-1) + e(k-2)]<br>$$</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> min(a, b)               (a&lt;b? a:b)              <span class="comment">// 返回最小值</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> max(a, b)               (a&gt;b? a:b)              <span class="comment">// 返回最大值</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> limiter(x, a, b)        (min(max(x, a), b))     <span class="comment">// 限制x在[a,b]内</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">float</span> Kp_INC;       <span class="comment">// 比例系数</span></span><br><span class="line">    <span class="keyword">float</span> Ki_INC;       <span class="comment">// 积分系数</span></span><br><span class="line">    <span class="keyword">float</span> Kd_INC;       <span class="comment">// 微分系数</span></span><br><span class="line">    <span class="keyword">int</span> PreErr;         <span class="comment">// e(k-2)</span></span><br><span class="line">    <span class="keyword">int</span> LastErr;        <span class="comment">// e(k-1)</span></span><br><span class="line">    <span class="keyword">int</span> Max_range;      <span class="comment">// 输出最大值</span></span><br><span class="line">    <span class="keyword">int</span> Min_range;      <span class="comment">// 输出最小值</span></span><br><span class="line">&#125;PID_INC;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">* 增量式PID初始化 </span></span><br><span class="line"><span class="comment">* Kp、Ki、Kd: 输入控制参数；</span></span><br><span class="line"><span class="comment">* Min_Num: 输出最小值，默认为0；</span></span><br><span class="line"><span class="comment">* Max_Num: 输出最大值，默认为0；</span></span><br><span class="line"><span class="comment">* 不设置Min_Num和Max_Num，则输出无限制。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PID_INC_Init</span><span class="params">(PID_INC *PID,<span class="keyword">float</span> Kp,<span class="keyword">float</span> Ki,<span class="keyword">float</span> Kd,<span class="keyword">int</span> Min_Num = <span class="number">0</span>,<span class="keyword">int</span> Max_Num = <span class="number">0</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PID-&gt;Kp_INC = Kp;</span><br><span class="line">    PID-&gt;Ki_INC = Ki;</span><br><span class="line">    PID-&gt;Kd_INC = Kd;</span><br><span class="line">    PID-&gt;PreErr = <span class="number">0</span>;</span><br><span class="line">    PID-&gt;LastErr = <span class="number">0</span>;</span><br><span class="line">    PID-&gt;Min_range = Min_Num;</span><br><span class="line">    PID-&gt;Max_range = Max_Num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">* 增量式PID控制</span></span><br><span class="line"><span class="comment">* targetValue: 	目标值；</span></span><br><span class="line"><span class="comment">* currentValue: 当前值。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">PID_INC_Contral</span><span class="params">(PID_INC *PID,<span class="keyword">int</span> targetValue,<span class="keyword">int</span> currentValue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> IErr = <span class="number">0</span>,Out = <span class="number">0</span>;                   <span class="comment">// 积分项 输出</span></span><br><span class="line">    IErr = targetValue - currentValue;      <span class="comment">// 当前误差 e(k)</span></span><br><span class="line">    Out = (<span class="keyword">int</span>)(   PID-&gt;Kp_INC * (IErr - PID-&gt;LastErr)   <span class="comment">// 比例项</span></span><br><span class="line">                 + PID-&gt;Ki_INC * IErr                        <span class="comment">// 积分项  </span></span><br><span class="line">                 + PID-&gt;Kd_INC * (IErr - <span class="number">2</span> * PID-&gt;LastErr + PID-&gt;PreErr)); <span class="comment">// 微分项</span></span><br><span class="line">    <span class="keyword">if</span>(PID-&gt;Min_range &lt; PID-&gt;Max_range) </span><br><span class="line">        Out = limiter(Out,PID-&gt;Min_range,PID-&gt;Max_range);</span><br><span class="line">    PID-&gt;PreErr  = PID-&gt;LastErr;</span><br><span class="line">    PID-&gt;LastErr = IErr;</span><br><span class="line">    <span class="keyword">return</span> Out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>增量式PID控制输出为增量，与位置式输出CtrlVal = P+I+D直接用作控制参数不同，增量式的的PID控制输出为CtrlVal = nowCtrlVal + P+I+D；</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+ 	
+  	 <div>
+  	   <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------The<i class="fa fa-paw"></i>End-------------</div>
+    
+</div>
+  	 </div>
+ 	
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Y.X
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://xdw2141.cn/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/" title="电机控制">https://xdw2141.cn/2022/03/30/ROS小车/PID控制算法/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/30/ROS%E5%B0%8F%E8%BD%A6/%E7%94%B5%E6%9C%BA%E6%8E%A7%E5%88%B6/" rel="prev" title="电机控制">
+      <i class="fa fa-chevron-left"></i> 电机控制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/09/%E6%A0%91%E8%8E%93%E6%B4%BE/%E6%A0%91%E8%8E%93%E6%B4%BEubuntu18%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/" rel="next" title="ubuntu18系统安装">
+      ubuntu18系统安装 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PID%E6%8E%A7%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">PID控制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE%E5%BC%8FPID%E6%8E%A7%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text">位置式PID控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E9%87%8F%E5%BC%8FPID%E6%8E%A7%E5%88%B6"><span class="nav-number">1.1.3.</span> <span class="nav-text">增量式PID控制</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Y.X"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Y.X</p>
+  <div class="site-description" itemprop="description">面包会有的，牛奶会有的，一切都会有的。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ShiYuXinNa" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ShiYuXinNa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xdw2141@163.com" title="E-Mail → mailto:xdw2141@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">闽ICP备2021005699号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Y.X</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共31.6k字</span>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'AXo64hoYkTm8EhMC9oQApTp6-gzGzoHsz',
+      appKey     : 'ep1zonA4xq9BlQWmmKsz6TjQ',
+      placeholder: "各位道友，请举手发言",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
