@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>福州大学一码通</title>
+    <style>
+        * {padding: 0;margin:0;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
+        body {background-color:#0a84bd;margin: 5px 0px 0px 0px;}
+        .time {font-weight:600;color:#1d953f;text-align:center;display:inline-block}
+    </style>
+    <script src="https://cdn.bootcss.com/jsbarcode/3.8.0/JsBarcode.all.min.js"></script>
+    <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+    <!-- 时间获取脚本 -->
+    <script type="text/javascript">
+        var content = 40194517535813449825;
+        var slogan = new Array("富强","民主","文明","和谐","自由","平等","公正","法治","爱国","敬业","诚信","友善","明德","至诚","博学","远志");
+        var startDate = Date.parse("2022-03-23");
+
+        window.onload=function() 
+        {
+            window.requestAnimationFrame(getDate)
+            window.requestAnimationFrame(CreateIma)
+        }
+        function getDate()
+        {
+            window.setTimeout(function(){
+                window.requestAnimationFrame(getDate)
+            },1000/2)
+            // 获取时间
+            var d=new Date(); 
+            var year=d.getFullYear()        //获取年  
+            var month=d.getMonth()+1;       //获取月     Date 对象返回月份 (0 ~ 11)
+            var day=d.getDay()              //获取日
+            var days=d.getDate()            //获取日期
+            var hour=d.getHours()           //获取小时
+            var minute=d.getMinutes()       //获取分钟
+            var second=d.getSeconds()       //获取秒
+            
+            
+            // 个位前面添0
+            if(month<10) month="0"+month
+            if(days<10) days="0"+days
+            if(hour<10) hour="0"+hour
+            if(minute<10) minute="0"+minute
+            if(second<10) second="0"+second
+
+            var theDate = Date.parse(year+"-"+month+"-"+days);
+            var Tools=document.getElementById("time_1")
+            var Tools2=document.getElementById("time_2")
+            var Tools3=document.getElementById("time_3")
+            var time1=month+"月"+days+"日"
+            var time2=second
+            var time3=hour+":"+minute
+            document.getElementById("text3").innerHTML="民主";
+            Tools.innerHTML=time1
+            Tools2.innerHTML=time2
+            Tools3.innerHTML=time3
+            
+        }
+        function CreateIma() {
+            // 生成条形码
+            var barcode = document.getElementById('barcode'),
+            options = {
+                width: 2,//较细处条形码的宽度
+                height: 70, //条形码的宽度，无高度直接设置项，由位数决定，可以通过CSS去调整，见下
+                format: "CODE128",
+                displayValue: false,//是否在条形码下方显示文字
+                margin: 2
+           		 };
+            JsBarcode(barcode, content, options); //原生JS方式
+            // 生成二维码
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width : 125,
+                height : 125});
+            qrcode.makeCode("40194517535813449825");
+        		}
+        
+     
+    </script>
+</head>
+<body>
+    <!-- 白色上部分内容 -->
+    <div style=" margin-left: 7%;margin-right: 7%;">
+		<ul style="line-height: 42px;list-style: none;display:inline-block;font-size: 20px;color: #ffffff; padding-left: 0;margin-bottom: 10px;margin-top: 6px;">
+            <li id="text1">姓名：王宇鑫</li>
+            <li id="text2">部门：物理与信息工程学院</li>
+        </ul>
+        <img src="1.png" alt="1.png" width="95px" height="100%" style="display:block;float: right;">
+    </div>
+    <!-- 白色部分内容 -->
+    <div  style=" background-color: #ffffff;margin-left: 7%;margin-right: 7%;border-radius: 8px;margin-bottom:26px;margin-top: 0px;">
+        <img id="barcode" style="clear: both;display: block;margin:auto;padding-top: 20px; " >
+        <ul style="text-align:center;font-size: large;margin-top:0;margin-bottom: 0;">
+            <li id="time_1" class="time" "></li>
+            <li id="time_2" class="time" style="font-size: 35px;"></li>
+            <li id="time_3" class="time" "></li>
+        </ul>
+        <div id="qrcode" style="clear: both;display: block;margin:auto;padding-top: 20px;width:125px; height:125px;"></div>
+        <marquee style="padding-top: 8px;">
+            <span id="text3" style="line-height: 47px;font-size: 40px;color: #1d953f;">
+            </span>
+        </marquee>
+        <p style="font-size: 12px;color:#1d953f;margin:0 10.4% 0 10.4%;">未见异常，允许通行，请主动出示，配合检测，并做好自我防护，出行前请确认。</p>
+        <div >
+            <img src="4.png" alt="4.png" width="20" height="20" style="clear: both;display: inline-block;margin-left: 30px;margin-top: 33px;margin-right: 3px;margin-bottom: -5px;" >
+            <p height="20" style="display: inline-block;color:#5b5b5b;font-size: 13px;line-height: 30px;font-weight:700;;list-style: none;display: inline-block;text-align:left;margin-bottom: 26px;">
+            一卡通
+            </p>
+        </div>
+    </div>
+    <!-- 白色下部分内容 -->
+    <div style="margin: 30px;  text-align: center;">
+        <a  href="http://id.fzu.edu.cn/authserver/login?service=http%3A%2F%2Fehall.fzu.edu.cn%2Flogin%3Fservice%3Dhttp%3A%2F%2Fehall.fzu.edu.cn%2Fnew%2Findex.html" style="text-decoration: none;color: white;font-size: large;font-weight: 700;border-radius: 5px;padding: 2px 6px 2px 6px;border: 1px solid;">每日健康填报</a>
+    </div>
+
+    <img id="barcode">
+    <div id="qrcode" style="width:125px; height:125px;">
+    </div>
+</body>
+</html>
+

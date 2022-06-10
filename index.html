@@ -157,6 +157,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/06/01/SV/sv/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/01/SV/sv/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-01 11:27:29 / 修改时间：11:40:23" itemprop="dateCreated datePublished" datetime="2022-06-01T11:27:29+08:00">2022-06-01</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/01/SV/sv/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/01/SV/sv/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Testbench-Architecture"><a href="#Testbench-Architecture" class="headerlink" title="Testbench Architecture"></a>Testbench Architecture</h1><p><img src="../../../../Git/Images/Untitled/image-20220601113826366.png" alt="image-20220601113826366"></p>
+<h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><h2 id="Create-Verilog-Test-Harness-File"><a href="#Create-Verilog-Test-Harness-File" class="headerlink" title="Create Verilog Test Harness File"></a>Create Verilog Test Harness File</h2><h3 id="Use-VCS-template-generator"><a href="#Use-VCS-template-generator" class="headerlink" title="Use VCS template generator"></a>Use VCS template generator</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntb_template -t router router.v</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generates-three-files"><a href="#Generates-three-files" class="headerlink" title="Generates three files"></a>Generates three files</h3><ul>
+<li><p>router.test_top.v (Verilog test harness file)</p>
+</li>
+<li><p>router. if. vrh (Discard for OpenVera only)</p>
+</li>
+<li><p>router. vr. tmp (Discard for OpenVera only)</p>
+</li>
+</ul>
+<h3 id="t-router-Specifies-DUT-module-name"><a href="#t-router-Specifies-DUT-module-name" class="headerlink" title="-t router Specifies DUT module name"></a>-t router Specifies DUT module name</h3><h3 id="router-v-DUT-Source-code-file"><a href="#router-v-DUT-Source-code-file" class="headerlink" title="router.v DUT Source code file"></a>router.v DUT Source code file</h3><h3 id="router-test-top-v-will-be-used-to-help-build-SystemVerilog-testbench-files"><a href="#router-test-top-v-will-be-used-to-help-build-SystemVerilog-testbench-files" class="headerlink" title="router. test_top.v will be used to help build SystemVerilog testbench files"></a>router. test_top.v will be used to help build SystemVerilog testbench files</h3><h2 id="Creating-SystemVerilog-Interface-File"><a href="#Creating-SystemVerilog-Interface-File" class="headerlink" title="Creating SystemVerilog Interface File"></a>Creating SystemVerilog Interface File</h2><h3 id="Create-interface-file-from-router-test-top-v"><a href="#Create-interface-file-from-router-test-top-v" class="headerlink" title="Create interface file from router.test_top.v"></a>Create interface file from router.test_top.v</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp router.test_top.v router_io.sv </span><br></pre></td></tr></table></figure>
+
+<h3 id="Encapsulate-signals-in-interface-block"><a href="#Encapsulate-signals-in-interface-block" class="headerlink" title="Encapsulate signals in interface block"></a>Encapsulate signals in interface block</h3><p><img src="../../../../Git/Images/Untitled/image-20220601113722690.png" alt="image-20220601113722690"></p>
+<h2 id="Define-Test-Program-Interface-Port"><a href="#Define-Test-Program-Interface-Port" class="headerlink" title="Define Test Program Interface Port"></a>Define Test Program Interface Port</h2><h3 id="By-default-all-interface-signals-are-asynchronous"><a href="#By-default-all-interface-signals-are-asynchronous" class="headerlink" title="By default all interface signals are asynchronous"></a>By default all interface signals are asynchronous</h3><h3 id="Synchronous-signals-can-be-created-via-clocking-block-and-connected-to-test-program-via-modport"><a href="#Synchronous-signals-can-be-created-via-clocking-block-and-connected-to-test-program-via-modport" class="headerlink" title="Synchronous signals can be created via clocking block and connected to test program via modport"></a>Synchronous signals can be created via clocking block and connected to test program via modport</h3>
+      
+    </div>
+
+    
+    
+    
+
+ 	
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/05/11/ROS%E5%B0%8F%E8%BD%A6/move_base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -991,103 +1079,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/03/07/ROS/Qt%E5%B7%A5%E5%85%B7%E7%AE%B1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Y.X">
-      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Y.X's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/07/ROS/Qt%E5%B7%A5%E5%85%B7%E7%AE%B1/" class="post-title-link" itemprop="url">ROS的一些可视化工具</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-07 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-07T00:00:00+08:00">2022-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-13 11:32:09" itemprop="dateModified" datetime="2022-04-13T11:32:09+08:00">2022-04-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ROS/" itemprop="url" rel="index"><span itemprop="name">ROS</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/03/07/ROS/Qt%E5%B7%A5%E5%85%B7%E7%AE%B1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/07/ROS/Qt%E5%B7%A5%E5%85%B7%E7%AE%B1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>ROS的一些可视化工具。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/07/ROS/Qt%E5%B7%A5%E5%85%B7%E7%AE%B1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
- 	
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1159,7 +1150,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1219,7 +1210,7 @@
   </div>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共31.6k字</span>
+  <span class="post-count">博客全站共31.7k字</span>
 </div>
 
 
