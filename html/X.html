@@ -9,6 +9,80 @@
         * {padding: 0;margin:0;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
         body {background-color:#0a84bd;margin: 5px 0px 0px 0px;}
         .time {font-weight:600;color:#1d953f;text-align:center;display:inline-block}
+        .form_1 {
+			width: 40%;
+			height: 300px;
+			border: 3px solid #a6a998;
+			visibility: hidden;
+			position: absolute;
+			z-index: 999;
+			opacity: 1;
+			overflow: hidden;
+			background-color: rgb(250, 250, 250);
+			text-align: center;
+			margin-top: 10%;
+			margin-left: 30%;
+			border-radius: 10px;
+		}
+
+		.open {
+			visibility: visible;
+			opacity: 1;
+		}
+
+		.input_1 {
+			margin-top: 15px;
+			width: 100%;
+			height: 40px;
+
+		}
+
+		input {
+			width: 280px;
+			height: 30px;
+			border-radius: 5px;
+			border: 1px solid #e5dfdf;
+		}
+
+		.input_1 .login_logo {
+			text-align: left;
+			font-size: 20px;
+			font-weight: 300;
+			padding-left: 30px;
+			float: left;
+		}
+
+		.input_1 .close {
+			width: 20px;
+			height: 20px;
+			color: #5d5d5d;
+			text-align: center;
+			line-height: 20px;
+			border: 1px solid #5d5d5d;
+			border-radius: 50%;
+			float: right;
+			padding-top: 0px;
+			margin-right: 10px;
+			font-size: 12px;
+		}
+		.input_1 .close:hover {
+			cursor: pointer;
+		}
+		hr {
+			background-color: #F8F8F8;
+		}
+		.submit {
+			border: 2px solid #a6a998;
+			height: 40px;
+            width: 40%;
+			background-color: rgb(203, 223, 171);
+			border: none;
+			border-radius: 10px;
+		}
+		.submit:hover {
+			background-color: #f88020;
+			color: white;
+		}
     </style>
     <script src="https://cdn.bootcss.com/jsbarcode/3.8.0/JsBarcode.all.min.js"></script>
     <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
@@ -22,6 +96,7 @@
         {
             window.requestAnimationFrame(getDate)
             window.requestAnimationFrame(CreateIma)
+            window.requestAnimationFrame(changeText)
         }
         function getDate()
         {
@@ -76,7 +151,24 @@
                 height : 125});
             qrcode.makeCode("40194517535813449825");
         		}
-        
+        function changeText() {
+			var text_1 = document.getElementById("text_1");
+			var btn_1 = document.getElementById("btn_1");
+			var close = document.getElementsByClassName("close");
+			var btn_2 = document.getElementById("btn_2");
+			var form_1 = document.getElementsByClassName("form_1");
+			btn_1.addEventListener('click', function () {
+				form_1[0].className = "form_1 open";
+			})
+			close[0].addEventListener('click', function () {
+				form_1[0].className = "form_1";
+			})
+			btn_2.addEventListener('click', function () {
+				document.getElementById("text1").innerHTML= text_1.value;
+
+				form_1[0].className = "form_1";
+			})
+		}
      
     </script>
 </head>
@@ -84,10 +176,24 @@
     <!-- 白色上部分内容 -->
     <div style=" margin-left: 7%;margin-right: 7%;">
 		<ul style="line-height: 42px;list-style: none;display:inline-block;font-size: 20px;color: #ffffff; padding-left: 0;margin-bottom: 10px;margin-top: 6px;">
-            <li id="text1">姓名：郑吴兵</li>
-            <li id="text2">部门：物理与信息工程学院</li>
+            <li >姓名：<span id="text1">张三</span></li>
+            <li >部门：<span id="text2">物理与信息工程学院</span></li>
         </ul>
         <img src="1.png" alt="1.png" width="90px"  style="display:block;float: right;">
+    </div>
+    <!-- 弹窗部分 -->
+    <div class="form_1">
+        <form>
+            <div class="input_1">
+                <div class="login_logo">姓名/部门修改</div>
+                <div class="close">X</div>
+            </div>
+            <hr>
+            <div class="input_1"><input style="text-indent: 1em;" type="text" id="text_1"  value = "张三"></div>
+            <div class="input_1"><input style="text-indent: 1em;" type="text" id="text_2"  value = "物理与信息工程学院"></div>
+            
+        </form>
+        <div ><button class="submit" id="btn_2"> 确 定</button></div>
     </div>
     <!-- 白色部分内容 -->
     <div  style=" background-color: #ffffff;margin-left: 7%;margin-right: 7%;border-radius: 8px;margin-bottom:26px;margin-top: 0px;">
@@ -112,7 +218,7 @@
     </div>
     <!-- 白色下部分内容 -->
     <div style="margin: 30px;  text-align: center;">
-        <a  href="http://id.fzu.edu.cn/authserver/login?service=http%3A%2F%2Fehall.fzu.edu.cn%2Flogin%3Fservice%3Dhttp%3A%2F%2Fehall.fzu.edu.cn%2Fnew%2Findex.html" style="text-decoration: none;color: white;font-size: large;font-weight: 700;border-radius: 5px;padding: 2px 6px 2px 6px;border: 1px solid;">每日健康填报</a>
+        <button  id="btn_1" style="background-color:#0a84bd;color: white;font-size: large;font-weight: 700;border-radius: 5px;padding: 2px 6px 2px 6px;border: 1px solid;">每日健康填报</button>
     </div>
 
     <img id="barcode">
