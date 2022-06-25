@@ -157,6 +157,185 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/06/14/ROS%E5%B0%8F%E8%BD%A6/YOLO/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Y.X">
+      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Y.X's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/14/ROS%E5%B0%8F%E8%BD%A6/YOLO/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-14 10:05:02" itemprop="dateCreated datePublished" datetime="2022-06-14T10:05:02+08:00">2022-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-20 09:32:45" itemprop="dateModified" datetime="2022-06-20T09:32:45+08:00">2022-06-20</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/14/ROS%E5%B0%8F%E8%BD%A6/YOLO/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/14/ROS%E5%B0%8F%E8%BD%A6/YOLO/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="YOLO-You-Only-Look-Once"><a href="#YOLO-You-Only-Look-Once" class="headerlink" title="YOLO(You Only Look Once)"></a>YOLO(You Only Look Once)</h1><h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><h3 id="map指标"><a href="#map指标" class="headerlink" title="map指标"></a>map指标</h3><blockquote>
+<p>mean Average Precision, 综合衡量检测效果, 即各类别AP（PR曲线下面积）的平均值。</p>
+</blockquote>
+<h3 id="IOU"><a href="#IOU" class="headerlink" title="IOU"></a>IOU</h3><blockquote>
+<p>交并比(Intersection overUnion),是目标检测中使用的一个概念,<em>IoU</em>计算的是“预测的边框”和“真实的边框”的交叠率,即它们的交集和并集的比值。</p>
+</blockquote>
+<p><img src="../../../../Git/Images/YOLO/image-20220614100843703.png" alt="image-20220614100843703"></p>
+<h3 id="置信度"><a href="#置信度" class="headerlink" title="置信度"></a>置信度</h3><p><img src="../../../../Git/Images/YOLO/image-20220614110116330.png" alt="image-20220614110116330"></p>
+<p><img src="../../../../Git/Images/YOLO/image-20220614111522091.png" alt="image-20220614111522091"></p>
+<p><img src="../../../../Git/Images/YOLO/image-20220614112600833.png" alt="image-20220614112600833"></p>
+<h2 id="YOLO-V1"><a href="#YOLO-V1" class="headerlink" title="YOLO-V1"></a>YOLO-V1</h2><p><strong>优点：</strong>快速，简单。<br><strong>问题1：</strong>每个Cell只预测一个类别，如果重叠无法解决<br><strong>问题2：</strong>小物体检测效果一般，长宽比可选的但单一</p>
+<h2 id="YOLO-V2"><a href="#YOLO-V2" class="headerlink" title="YOLO-V2"></a>YOLO-V2</h2><p><img src="../../../../Git/Images/YOLO/image-20220614113147040.png" alt="image-20220614113147040"></p>
+<h4 id="YOLO-V2-Batch-Normalization"><a href="#YOLO-V2-Batch-Normalization" class="headerlink" title="YOLO-V2-Batch Normalization"></a>YOLO-V2-Batch Normalization</h4><ol>
+<li>V2版本舍弃Dropout，卷积后全部加入Batch Normalization</li>
+<li>网络的每一层的输入都做了归一化，收敛相对更容易</li>
+<li>经过Batch Normalization处理后的网络会提升2%的mAP</li>
+<li>从现在的角度来看，Batch Normalization已经成网络必备处理</li>
+</ol>
+<h4 id="YOLO-V2-更大的分辨率"><a href="#YOLO-V2-更大的分辨率" class="headerlink" title="YOLO-V2-更大的分辨率"></a>YOLO-V2-更大的分辨率</h4><ol>
+<li>V1训练时用的是224*224，测试时使用448 *448</li>
+<li>可能导致模型水士不服，V2训练时额外又进行了10次448*448的微调</li>
+<li>使用高分辨率分类器后，YOLOv2的mAP提升了约4%</li>
+</ol>
+<h4 id="YOLO-V2-网络结构"><a href="#YOLO-V2-网络结构" class="headerlink" title="YOLO-V2-网络结构"></a>YOLO-V2-网络结构</h4><ol>
+<li>DarkNet实际输入为416*416 (32的倍数)</li>
+<li>没有FC层，5次降采样(13 * 13) (416/2^5)</li>
+<li>1*1卷积节省了很多参数</li>
+</ol>
+<p><img src="../../../../Git/Images/YOLO/image-20220614114039081.png" alt="image-20220614114039081"></p>
+<h4 id="YOLO-V2-聚类提取先验框"><a href="#YOLO-V2-聚类提取先验框" class="headerlink" title="YOLO-V2-聚类提取先验框"></a>YOLO-V2-聚类提取先验框</h4><ul>
+<li>faster-rcnn系列选择的先验比例都是常规的，但是不一定完全适合数据集</li>
+<li>K-means聚类中的E离：d（box，centroids）= 1-IOU（box，centroids）（非欧式距离，用欧式距离 大的先验框误差较大）</li>
+</ul>
+<p><img src="../../../../Git/Images/YOLO/image-20220616170137231.png" alt="image-20220616170137231"></p>
+<h4 id="YOLO-V2-Anchor-Box"><a href="#YOLO-V2-Anchor-Box" class="headerlink" title="YOLO-V2-Anchor Box"></a>YOLO-V2-Anchor Box</h4><ul>
+<li>通过引入anchor boxes，使得预测的box数量更多（13 * 13 * n）</li>
+<li>跟faster-rcnn系列不同的是先验框并不是直接按照长宽固定比给定</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">with anchor</th>
+<th align="center">69.2 mAP</th>
+<th align="center">88% recall</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">without anchor</td>
+<td align="center">69.5 mAP</td>
+<td align="center">81% recall</td>
+</tr>
+</tbody></table>
+<h4 id="YOLO-V2-Directed-Location-Predictior"><a href="#YOLO-V2-Directed-Location-Predictior" class="headerlink" title="YOLO-V2-Directed Location Predictior"></a>YOLO-V2-Directed Location Predictior</h4><ul>
+<li>bbox：中心为（Xp，Yp）；宽和高为（Wp，Hp），则：X = Xp + Wp * TX, Y = Yp + Hp * TY</li>
+<li>TX=1，则将bbox在x轴向右移动wp；tx=-1则将其向左移动wp</li>
+<li>这样会导致收敛问题，模型不稳定，尤其是刚开始进行训练的时候</li>
+<li>V2中并没有直接使用偏移量，而是选择相对grid cell的偏移量</li>
+</ul>
+<p><img src="../../../../Git/Images/YOLO/image-20220616174355470.png" alt="image-20220616174355470"><br>$$<br>\begin{aligned}<br>b_{x} &amp;=\sigma\left(t_{x}\right)+c_{x} \<br>b_{y} &amp;=\sigma\left(t_{y}\right)+c_{y} \<br>b_{w} &amp;=p_{w} e^{t_{w}} \<br>b_{h} &amp;=p_{h} e^{t_{h}}<br>\end{aligned}<br>$$</p>
+<h4 id="YOLO-V2-Fine-Grained-Features"><a href="#YOLO-V2-Fine-Grained-Features" class="headerlink" title="YOLO-V2-Fine-Grained Features"></a>YOLO-V2-Fine-Grained Features</h4><blockquote>
+<p>堆叠小的卷积核所需的参数更少一些，并且卷积过程越多，特征提取也会越细致，加入的非线性变换也随着增多，还不会增大权重参数个数，这就是VGG网络的基本出发点，用小的卷积核来完成体特征提取操作。</p>
+</blockquote>
+<p>最后一层时感受野太大了，小目标可能丢失了，需融合之前的特征.</p>
+<p><img src="../../../../Git/Images/YOLO/image-20220616175713837.png" alt="image-20220616175713837"></p>
+<h4 id="YOLO-V2-Multi-Scale"><a href="#YOLO-V2-Multi-Scale" class="headerlink" title="YOLO-V2-Multi-Scale"></a>YOLO-V2-Multi-Scale</h4><p>由于V2网络结构没有FC，可以拥有较大的输入图片范围。一定iterations之后改变输入图片大小。最小的图像尺寸为320x 320最大的图像尺寸为608x 608</p>
+<p><img src="../../../../Git/Images/YOLO/image-20220616180033561.png" alt="image-20220616180033561"></p>
+<h2 id="YOLO-V3"><a href="#YOLO-V3" class="headerlink" title="YOLO-V3"></a>YOLO-V3</h2><p><img src="../../../../Git/Images/YOLO/image-20220616180448995.png" alt="image-20220616180448995"></p>
+<ul>
+<li><p>V3最大的改进是网络结构，使其更适合小目标检测特征</p>
+</li>
+<li><p>做的更细致，融入多持续特征图信息来预测不同规格物体</p>
+</li>
+<li><p>先验框更丰富了，3种scale，每种3个规格，一共9种</p>
+</li>
+<li><p>softmax改进，预测多标签任务</p>
+</li>
+</ul>
+<h4 id="多种scale"><a href="#多种scale" class="headerlink" title="多种scale"></a>多种scale<img src="../../../../Git/Images/YOLO/image-20220616220928897.png" alt="image-20220616220928897"></h4><p><img src="../../../../Git/Images/YOLO/image-20220616221646756.png" alt="image-20220616221646756"></p>
+<h4 id="残差连接-为了更好的特征"><a href="#残差连接-为了更好的特征" class="headerlink" title="残差连接-为了更好的特征"></a>残差连接-为了更好的特征</h4><blockquote>
+<p>从今天的角度来看，基本所有网络架构都用上了残差连接的方法，V3中也用了resnet的思想，堆叠更多的层来进行特征提取。</p>
+</blockquote>
+<h4 id="核心网络架构"><a href="#核心网络架构" class="headerlink" title="核心网络架构"></a><img src="../../../../Git/Images/YOLO/image-20220616221919407.png" alt="image-20220616221919407">核心网络架构</h4><ul>
+<li>没有池化和全连接层，全部卷积</li>
+<li>下采样通过stride为2实现</li>
+<li>3种scale，更多先验框</li>
+<li>基本上当下经典做法全融入了</li>
+</ul>
+<p><img src="../../../../Git/Images/YOLO/image-20220616223627049.png" alt="image-20220616223627049"></p>
+<p><img src="../../../../Git/Images/YOLO/image-20220616223741274.png" alt="image-20220616223741274"></p>
+<h4 id="先验框设计"><a href="#先验框设计" class="headerlink" title="先验框设计"></a>先验框设计</h4><p>YOLO-V2中选了5个，YOLO-V3一共有9种</p>
+<p>13 * 13特征图上：(116x90) ，(156x198)  ，(373x326)                   (大)</p>
+<p>26 * 26特征图上：(30x61)   ，(62x45)       ，(59x119)                     (中)</p>
+<p>52 * 52特征图上：(10x13)   ，(16x30)       ，(33x23)                       (小)</p>
+<p><img src="../../../../Git/Images/YOLO/image-20220616224423160.png" alt="image-20220616224423160"></p>
+<h4 id="softmax层替代"><a href="#softmax层替代" class="headerlink" title="softmax层替代"></a>softmax层替代</h4><ul>
+<li>物体检测任务中可能一个物体有多个标签</li>
+<li>logistic激活函数来完成，这样就能预测每一个类别是/不是</li>
+</ul>
+<p><img src="../../../../Git/Images/YOLO/image-20220616224653320.png" alt="image-20220616224653320"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+ 	
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/06/01/SV/sv/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -982,103 +1161,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xdw2141.cn/2022/03/07/ROS/Launch%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Y.X">
-      <meta itemprop="description" content="面包会有的，牛奶会有的，一切都会有的。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Y.X's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/07/ROS/Launch%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95/" class="post-title-link" itemprop="url">ROS的Launch</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-07 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-07T00:00:00+08:00">2022-03-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-23 11:36:54" itemprop="dateModified" datetime="2022-03-23T11:36:54+08:00">2022-03-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ROS/" itemprop="url" rel="index"><span itemprop="name">ROS</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/03/07/ROS/Launch%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/07/ROS/Launch%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>对于ROS中运行多个节点时，一般要打开多个终端，且输入的命令可能会存在语法忘记等困难，而launch文件可以很好的解决这些问题。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/07/ROS/Launch%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
- 	
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1150,7 +1232,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1210,7 +1292,7 @@
   </div>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共31.7k字</span>
+  <span class="post-count">博客全站共32.7k字</span>
 </div>
 
 
